@@ -51,11 +51,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  //   Properties.associate = (models) => {
-  //     Properties.hasMany(models.User, {
-  //       onDelete: "cascade",
-  //       foreignKey: "brokerId",
-  //     });
-  //   };
+  Properties.associate = (models) => {
+    Properties.belongsTo(models.Users, {
+      foreignKey: "broker_id",
+      as: "user",
+    });
+  };
+
   return Properties;
 };

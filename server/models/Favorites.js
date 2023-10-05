@@ -1,39 +1,39 @@
-module.exports = (sequelize,DataTypes)=>{
-    const Favorites = sequelize.define("Favorites",{
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        user_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Users',
-                key: 'id',
-              },
-        },
-        property_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Properties',
-                key: 'id',
-              },
-        }        
-    });
+module.exports = (sequelize, DataTypes) => {
+  const Favorites = sequelize.define("Favorites", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    property_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Properties",
+        key: "id",
+      },
+    },
+  });
 
-    Favorites.associate = (models) => {
-        Pictures.belongsTo(models.Users, {
-          foreignKey: 'user_id',
-          as: 'user',
-        });
-    };
-    
-    Favorites.associate = (models) => {
-        Pictures.belongsTo(models.Properties, {
-          foreignKey: 'property_id',
-          as: 'proerty',
-        });
-    };
-    
-    return Favorites;
+  Favorites.associate = (models) => {
+    Favorites.belongsTo(models.Users, {
+      foreignKey: "user_id",
+      as: "user",
+    });
+  };
+
+  Favorites.associate = (models) => {
+    Favorites.belongsTo(models.Properties, {
+      foreignKey: "property_id",
+      as: "proerty",
+    });
+  };
+
+  return Favorites;
 };
