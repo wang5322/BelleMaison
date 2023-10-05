@@ -1,5 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const Properties = sequelize.define("Properties", {
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     address: {
       type: DataTypes.STRING(100),
       allowNull: false,
