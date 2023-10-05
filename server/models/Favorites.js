@@ -18,12 +18,7 @@ module.exports = (sequelize,DataTypes)=>{
                 model: 'Properties',
                 key: 'id',
               },
-        },
-        picture_url: {
-            type: DataTypes.STRING(500),
-            allowNull: false,
-        },
-        
+        }        
     });
 
     Favorites.associate = (models) => {
