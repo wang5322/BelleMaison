@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Users.hasMany(models.Favorites, {
       foreignKey: "user_Id",
-      as: "properties",
+      as: "favorites",
     });
   };
 
