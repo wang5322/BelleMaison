@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    phone: {
+      type: DataTypes.STRING(15),
+      allowNull: false,
+    },
     email: {
       type: DataTypes.STRING(50),
       unique: true,
@@ -44,14 +48,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       default: 0,
     },
+    broker_licence_url: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
   });
 
   Users.associate = (models) => {
     Users.hasMany(models.Properties, {
-      foreignKey: "user_Id",
+      foreignKey: "broker_id",
     });
     Users.hasMany(models.Favorites, {
-      foreignKey: "user_Id",
+      foreignKey: "user_id",
     });
   };
 

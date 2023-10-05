@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Properties = sequelize.define("Properties", {
-    user_id: {
+    broker_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(4000),
       allowNull: true,
     },
-    isAction: {
+    isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
@@ -57,7 +57,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Properties.associate = (models) => {
     Properties.belongsTo(models.Users, {
-      foreignKey: "user_id",
+      foreignKey: "broker_id",
+      as: "user",
     });
     Properties.hasMany(models.Favorites, {
       foreignKey: "property_id",
