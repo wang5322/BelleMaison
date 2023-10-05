@@ -53,8 +53,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Properties.associate = (models) => {
     Properties.belongsTo(models.Users, {
-      foreignKey: "broker_id",
-      as: "user",
+      foreignKey: "user_id",
+    });
+    Properties.hasMany(models.Favorites, {
+      foreignKey: "property_id",
     });
   };
 

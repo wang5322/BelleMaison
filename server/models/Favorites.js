@@ -24,14 +24,9 @@ module.exports = (sequelize, DataTypes) => {
   Favorites.associate = (models) => {
     Favorites.belongsTo(models.Users, {
       foreignKey: "user_id",
-      as: "user",
     });
-  };
-
-  Favorites.associate = (models) => {
     Favorites.belongsTo(models.Properties, {
       foreignKey: "property_id",
-      as: "proerty",
     });
   };
 
