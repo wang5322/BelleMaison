@@ -42,20 +42,17 @@ module.exports = {
         if (!user){
             return res.json({ error: "User Doesn't Exist" });
         }
-console.log("======user.password======",user.password);
         bcrypt.compare(password, user.password).then((match) => {
             if (!match) {
                 return res.json({ error: "Wrong Username And Password Combination" });
             }
             const JWT_SECRET = process.env.JWT_SECRET;
-            console.log("======JWT_SECRET======",JWT_SECRET);
-     
 
             const accessToken = sign(
-                {email: user.email, id: user.id},
+                {role: user.role, email: user.email, id: user.id},
                 JWT_SECRET
             );
-            res.json({token:accessToken, email: email, id: user.id});
+            res.json({token:accessToken, role: user.role, email: email, id: user.id});
         });
     },
     getAuth: [validateToken, (req, res)=>{
