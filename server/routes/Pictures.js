@@ -6,9 +6,9 @@ const s3Middleware = require("../middlewares/s3UploadMiddleware");
 
 router.post("/", uploadImageMemory, s3Middleware, pictureController.add);
 
-router.get("/", s3Middleware, pictureController.getAll);
+router.get("/byProp/:id", s3Middleware, pictureController.getByProp);
 
-// router.get("/byId/:id", pictureController.getById);
+router.get("/byBroker/:id", pictureController.getByBroker);
 
 // router.delete("/byId/:id", pictureController.delete);
 

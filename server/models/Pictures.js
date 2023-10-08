@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     imageName: {
-      type: DataTypes.STRING(32),
+      type: DataTypes.STRING(200),
       allowNull: false,
     },
     property_id: {
@@ -15,16 +15,28 @@ module.exports = (sequelize, DataTypes) => {
         model: "Properties",
         key: "id",
       },
+      allowNull: true,
     },
-    // picture_url: {
-    //   type: DataTypes.STRING(500),
-    //   allowNull: false,
-    // },
+    broker_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      allowNull: true,
+    },
+    isCertificate: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
   });
 
   Pictures.associate = (models) => {
     Pictures.belongsTo(models.Properties, {
       foreignKey: "property_id",
+    });
+    Pictures.belongsTo(models.Users, {
+      foreignKey: "broker_id",
     });
   };
 
