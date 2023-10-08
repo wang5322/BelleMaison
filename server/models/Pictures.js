@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    imageName: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+    },
     property_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -12,10 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         key: "id",
       },
     },
-    picture_url: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
-    },
+    // picture_url: {
+    //   type: DataTypes.STRING(500),
+    //   allowNull: false,
+    // },
   });
 
   Pictures.associate = (models) => {

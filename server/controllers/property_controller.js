@@ -72,15 +72,6 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
-
-  //Not implemented this time
-  deleteById: async (req, res) => {
-    try {
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  },
 };
 
 function isValidProperty(property, res) {
