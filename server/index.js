@@ -19,6 +19,9 @@ app.use("/api/property", propertyRouter);
 const pictureRouter = require("./routes/Pictures");
 app.use("/api/picture", pictureRouter);
 
+const favoriteRouter = require("./routes/Favorites");
+app.use("/api/favorites", favoriteRouter);
+
 //sequelize will first sync the models with the database, if the table does not exist,
 //it will create the table according to the files in models folder then connect the server
 db.sequelize.sync().then(() => {
