@@ -37,7 +37,6 @@ module.exports = {
       const property = await Properties.findOne({
         where: { id: id },
       });
-
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });
       }
@@ -80,7 +79,11 @@ module.exports = {
         where: { id: id },
       });
 
-      res.status(200).json(updatedProperty);
+      res
+        .status(200)
+        .json({
+          message: `Propery of id ${id} has been successfully updated.`,
+        });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
