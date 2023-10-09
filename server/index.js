@@ -15,9 +15,9 @@ const db = require("./models");
 const userRouter = require("./routes/Users");
 app.use("/api/users", userRouter);
 const propertyRouter = require("./routes/Properties");
-app.use("/api/property", propertyRouter);
+app.use("/api/properties", propertyRouter);
 const pictureRouter = require("./routes/Pictures");
-app.use("/api/picture", pictureRouter);
+app.use("/api/pictures", pictureRouter);
 
 const favoriteRouter = require("./routes/Favorites");
 app.use("/api/favorites", favoriteRouter);

@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     year_built: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(4),
       allowNull: false,
     },
     price: {
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     isActive: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TINYINT(1),
       allowNull: false,
     },
   });
