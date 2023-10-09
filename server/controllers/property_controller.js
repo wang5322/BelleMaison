@@ -4,9 +4,12 @@ var validator = require("validator");
 module.exports = {
   add: async (req, res) => {
     try {
-      //TODO: add auth payload(eg: userId, userEmail)
-      if (isValidProperty(Property, res)) {
-        const addedProperty = await Properties.create(Property);
+      const property = req.body;
+      // TODO: add auth middleware
+      // const userId = req.user.id;
+      // property.broker_id = userId;
+      if (isValidProperty(property, res)) {
+        const addedProperty = await Properties.create(property);
         res.status(201).json(addedProperty);
       }
     } catch (error) {
@@ -46,6 +49,7 @@ module.exports = {
   },
   toggleActive: async (req, res) => {
     try {
+      const toggleData = req.body;
       const id = req.params.id;
       const property = await Properties.findOne({
         where: { id: id },
@@ -53,6 +57,10 @@ module.exports = {
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });
       }
+      await property.update(toggleData, {
+        where: { id: id },
+      });
+      res.status(200).json({ message: "Property's state has been toggled" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -61,12 +69,18 @@ module.exports = {
   update: async (req, res) => {
     try {
       const id = req.params.id;
+      const newProperty = req.body;
       const property = await Properties.findOne({
         where: { id: id },
       });
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });
       }
+      const updatedProperty = await Properties.update(newProperty, {
+        where: { id: id },
+      });
+
+      res.status(200).json(updatedProperty);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -75,9 +89,21 @@ module.exports = {
 };
 
 function isValidProperty(property, res) {
+  if (property.broker_id === null || property.broker_id <= 0) {
+    res.status(400).send({
+      message: "Broker id is required",
+    });
+    return false;
+  }
   if (!validator.isLength(property.address, { min: 10, max: 100 })) {
     res.status(400).send({
       message: "Address must be between 10-100 characters",
+    });
+    return false;
+  }
+  if (validator.isEmpty(property.city)) {
+    res.status(400).send({
+      message: "City name is required",
     });
     return false;
   }
@@ -101,19 +127,19 @@ function isValidProperty(property, res) {
     });
     return false;
   }
-  if (validator.isEmpty(property.rooms)) {
+  if (property.rooms === null || property.rooms <= 0) {
     res.status(400).send({
       message: "Room number is required",
     });
     return false;
   }
-  if (validator.isEmpty(property.bathrooms)) {
+  if (property.bathrooms === null || property.bathrooms <= 0) {
     res.status(400).send({
       message: "Bathroom number is required",
     });
     return false;
   }
-  if (validator.isEmpty(property.bedrooms)) {
+  if (property.bedrooms === null || property.bedrooms < 0) {
     res.status(400).send({
       message: "Bedroom number is required",
     });
@@ -125,13 +151,13 @@ function isValidProperty(property, res) {
     });
     return false;
   }
-  if (validator.isEmpty(property.price)) {
+  if (property.price === null || property.price <= 0) {
     res.status(400).send({
-      message: "Price is required",
+      message: "Price is required, and must be an integer",
     });
     return false;
   }
-  if (validator.isEmpty(property.isAction)) {
+  if (property.isActive !== 0 && property.isActive !== 1) {
     res.status(400).send({
       message: "isAction is required",
     });
