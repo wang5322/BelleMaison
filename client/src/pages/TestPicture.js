@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import UploadImage from "../components/UploadImage";
+import GetImageTest from "../components/GetImageTest";
 
 function TestPicture() {
   const [file, setFile] = useState();
-  const [caption, setCaption] = useState("");
 
   //   const navigate = useNavigate();
 
@@ -13,8 +14,7 @@ function TestPicture() {
 
     const formData = new FormData(); // FormData is needed to send multipart/formData
     formData.append("image", file);
-    formData.append("caption", caption);
-    await axios.post("http://localhost:3005/api/picture", formData, {
+    await axios.post("http://localhost:3005/api/pictures", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -33,14 +33,11 @@ function TestPicture() {
         className="flex flex-col space-y-5 px-5 py-14"
       >
         <input onChange={fileSelected} type="file" accept="image/*"></input>
-        <input
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-          type="text"
-          placeholder="Caption"
-        ></input>
+
         <button type="submit">Submit</button>
       </form>
+      <UploadImage />
+      <GetImageTest />
     </div>
   );
 }

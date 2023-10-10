@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     imageName: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
     property_id: {
@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     isCertificate: {
       type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    imageUrl: {
+      type: DataTypes.STRING(3000),
       allowNull: true,
     },
   });

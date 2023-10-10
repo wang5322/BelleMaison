@@ -8,19 +8,20 @@ module.exports = {
   add: async (req, res) => {
     try {
       //TODO: add auth payload(eg: userId, userEmail)
-      const Picture = req.body;
-      console.log("req.body", Picture);
-      console.log("req.file", req.file);
+      // const Picture = req.body;
+      // console.log("req.body", Picture);
+      // console.log("req.file", req.file);
 
       //   req.file.buffer;
       const randomImageName = (bytes = 32) =>
         crypto.randomBytes(bytes).toString("hex");
       const imageName = randomImageName();
-      console.log("randomImage", imageName);
+      const s3key = `${req.file.originalname}-${imageName}`;
+      // console.log("randomImage", imageName);
 
       const params = {
         Bucket: req.bucketName,
-        Key: imageName,
+        Key: s3key,
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
       };
@@ -28,35 +29,55 @@ module.exports = {
 
       await req.s3.send(command);
       const picture = await Pictures.create({
-        imageName: imageName,
-        property_id: 1,
+        imageName: s3key,
+        property_id: 6,
       });
 
-      res.status(201).send(picture);
+      res.status(201).json(picture);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   },
+
   //
   getByProp: async (req, res) => {
     try {
       const id = req.params.id;
       const pictures = await Pictures.findAll({ where: { property_id: id } });
-      if (!pictures) {
-        res.status(400).json({ message: "Pictures don't exist" });
-      }
-      for (const picture of pictures) {
-        const getObjectParams = {
-          Bucket: req.bucketName,
-          Key: picture.imageName,
-        };
-        // console.log(picture.imageName);
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(req.s3, command, { expiresIn: 3600 });
-        picture.imageUrl = url;
-        // console.log("imageURLofPicture:", picture.imageUrl);
-      }
+
+      // for (const picture of pictures) {
+      //   const getObjectParams = {
+      //     Bucket: req.bucketName,
+      //     Key: picture.imageName,
+      //   };
+      //   // console.log(picture.imageName);
+      //   const command = new GetObjectCommand(getObjectParams);
+      //   const url = await getSignedUrl(req.s3, command, { expiresIn: 3600 });
+      //   picture.imageUrl = url;
+      //   console.log("imageURLofPicture:", picture.imageUrl);
+      // }
+
+      await Promise.all(
+        pictures.map(async (picture) => {
+          const getObjectParams = {
+            Bucket: req.bucketName,
+            Key: picture.imageName,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+
+          try {
+            const url = await getSignedUrl(req.s3, command, {
+              expiresIn: 3600,
+            });
+            picture.imageUrl = url;
+            // console.log("imageURLofPicture:", picture.imageUrl);
+          } catch (error) {
+            console.error("Error generating signed URL:", error);
+          }
+        })
+      );
+      console.log("Pictures with URLs:", pictures);
 
       res.status(200).send(pictures);
     } catch (error) {
