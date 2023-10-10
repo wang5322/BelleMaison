@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    imageUrl: {
+      type: DataTypes.STRING(3000),
+      allowNull: true,
+    },
   });
 
   Pictures.associate = (models) => {

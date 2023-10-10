@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import UploadImage from "../components/UploadImage";
+import GetImageTest from "../components/GetImageTest";
 
 function TestPicture() {
   const [file, setFile] = useState();
@@ -43,6 +44,7 @@ function TestPicture() {
         <button type="submit">Submit</button>
       </form>
       <UploadImage />
+      <GetImageTest />
     </div>
   );
 }
