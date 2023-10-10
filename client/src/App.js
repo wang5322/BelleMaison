@@ -24,7 +24,6 @@ function App() {
       <AuthContext.Provider value={{authState, setAuthState }}>
         {/* <Navbar /> */}
         <Navbar2 />
-
         <Router>      
           <Routes>
             <Route path="/" exact element={<Home />} />
