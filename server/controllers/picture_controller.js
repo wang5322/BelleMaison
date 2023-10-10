@@ -8,19 +8,20 @@ module.exports = {
   add: async (req, res) => {
     try {
       //TODO: add auth payload(eg: userId, userEmail)
-      const Picture = req.body;
-      console.log("req.body", Picture);
-      console.log("req.file", req.file);
+      // const Picture = req.body;
+      // console.log("req.body", Picture);
+      // console.log("req.file", req.file);
 
       //   req.file.buffer;
       const randomImageName = (bytes = 32) =>
         crypto.randomBytes(bytes).toString("hex");
       const imageName = randomImageName();
-      console.log("randomImage", imageName);
+      const s3key = `${req.file.originalname}-${imageName}`;
+      // console.log("randomImage", imageName);
 
       const params = {
         Bucket: req.bucketName,
-        Key: imageName,
+        Key: s3key,
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
       };
@@ -28,7 +29,7 @@ module.exports = {
 
       await req.s3.send(command);
       const picture = await Pictures.create({
-        imageName: imageName,
+        imageName: s3key,
         property_id: 6,
       });
 
