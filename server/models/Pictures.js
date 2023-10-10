@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     imageName: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
     property_id: {

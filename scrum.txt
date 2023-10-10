@@ -1,0 +1,45 @@
+=========2023-10-10======
+Xuerun
+1.  Done / not done since last scrum:
+-Created Trello
+-Created git ripo
+-Finished implement google map and geolocate
+2. To do until next Scrum:
+-mortagage calculator
+-try to finish the single property page
+3. Need assistance/ figure things out
+N/A
+
+Shiyu
+
+1.  Done / not done since last scrum:
+-created AWS RDS and connected to workbench
+-created AWS S3
+-completed properties api
+-created pictures api, succeed uploading pictures to S3 bucket from server
+2. To do until next Scrum:
+-add delete for pictures
+-create property upload page
+-try upload property info and pictures at once
+3. Need assistance / figure things out
+-test property api
+
+
+
+Jing
+
+1.  Done / not done since last scrum:
+-update user auth, add .env file
+-add favorite route and controller
+-add user route, user_cotrallor
+-finish server size user register,login,find user by id.
+
+2. To do until next Scrum:
+-unfinish:
+-inplement search bar
+-register page
+
+plan to do:
+-register page
+-login page
+-add 5 properties record into properties table
