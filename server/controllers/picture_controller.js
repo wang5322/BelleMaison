@@ -29,7 +29,7 @@ module.exports = {
       await req.s3.send(command);
       const picture = await Pictures.create({
         imageName: imageName,
-        property_id: 1,
+        property_id: 6,
       });
 
       res.status(201).send(picture);
@@ -38,6 +38,7 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+
   //
   getByProp: async (req, res) => {
     try {
