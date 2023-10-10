@@ -14,42 +14,7 @@ function App() {
       <Navbar2 />
       <SearchBar />
 
-      <Router>
-        <div style={{
-          display: "flex",
-          background: 'orange',
-          padding: '5px 0 5px 5px',
-          fontSize: '20px'
-        }}>
-          <div style={{ margin: '10px' }}>
-
-            <NavLink to="/" style={({ isActive }) => ({
-              color: isActive ? 'black' : 'white'
-            })}>Belle Maison</NavLink>
-          </div>
-
-          <div style={{ margin: '10px', contentalign: 'end' }}>
-            <NavLink to="/add" style={({ isActive }) => ({
-              color: isActive ? 'black' : 'white'
-            })}>Brokers</NavLink>
-          </div>
-
-          <div style={{ margin: '10px' }}>
-            <NavLink to="/" style={({ isActive }) => ({
-              color: isActive ? 'black' : 'white'
-            })}>login</NavLink>
-          </div>
-          <div style={{ margin: '10px' }}>
-            <NavLink to="/" style={({ isActive }) => ({
-              color: isActive ? 'black' : 'white'
-            })}>register</NavLink>
-          </div>
-          <div style={{ margin: '10px' }}>
-            <NavLink to="/" style={({ isActive }) => ({
-              color: isActive ? 'black' : 'white'
-            })}>logout</NavLink>
-          </div>
-        </div>
+      <Router>      
         <Routes>
           {/* <Route path="/" exact element={<Home />} /> */}
           <Route path="/testPicture" exact element={<TestPicture />} />
