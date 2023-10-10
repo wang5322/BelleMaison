@@ -9,25 +9,23 @@ const { validateToken } = require('../middlewares/AuthMiddleware');
 
 module.exports = {
     add: async (req, res) => {
-        const { email, password, name, phone, address, city, postal,
-            role, is_active, broker_approval, broker_licence_url } = req.body;
-        //TODO CHECK IF EMAIL ALREADY EXIST
+        const { email, password } = req.body;
         bcrypt.hash(password, 10).then((hash) => {
             Users.create({
                 email: email,
                 password: hash,
-                name: name,
-                phone: phone,
-                address: address,
-                city: city,
-                postal: postal,
-                role: role,
-                is_active: is_active,
-                broker_approval: broker_approval,
-                broker_licence_url: broker_licence_url
+                name: "",
+                phone: "",
+                address: "",
+                city: "",
+                postal: "",
+                role: "buyer",
+                is_active: 1,
+                broker_approval: "",
+                broker_licence_url: ""
             }).catch((err) => {
                 if (err instanceof Sequelize.UniqueConstraintError) {
-                    return res.status(400).json({ message: 'Email or Username already exists' });
+                    return res.status(400).json({ message: 'Email already exists' });
                 } else {
                     return res.status(500).json({ message: 'Internal Server Error' });
                 }
@@ -44,12 +42,12 @@ module.exports = {
         }
         bcrypt.compare(password, user.password).then((match) => {
             if (!match) {
-                return res.json({ error: "Wrong Username And Password Combination" });
+                return res.json({ error: "Wrong email And Password Combination" });
             }
             const JWT_SECRET = process.env.JWT_SECRET;
 
             const accessToken = sign(
-                { role: user.role, email: user.email, id: user.id },
+                { email: user.email, id: user.id, role: user.role },
                 JWT_SECRET
             );
             res.json({ token: accessToken, role: user.role, email: email, id: user.id });
@@ -60,7 +58,6 @@ module.exports = {
     }],
     getById: async (req, res) => {
         const id = req.params.id;
-        console.log(" ==============id==============", id);
         const user = await Users.findOne({ where: { id: id } })
             .catch((err) => {
                 return res.json(err);
