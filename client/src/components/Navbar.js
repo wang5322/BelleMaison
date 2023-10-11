@@ -59,7 +59,8 @@ function OffcanvasNavbar() {
                     Something else here
                   </NavDropdown.Item>
                 </NavDropdown>
-                
+                  <Nav.Link href="/login">Login</Nav.Link>
+                  <Nav.Link href="/register">Register</Nav.Link>
                   <h3>You are logged in as: {authState.email} </h3>
                   {authState.status && <button onClick={logout}> Logout</button>}
                 
