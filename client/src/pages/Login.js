@@ -29,10 +29,15 @@ function Login(){
                 alert(response.data.error);
             }else{
                 localStorage.setItem("accessToken", response.data.token);
+console.log("email", response.data.email);
+console.log("id", response.data.id);
+console.log("role", response.data.role);
+console.log("approval", response.data.broker_approval);
                 setAuthState({
                     email: response.data.email, 
                     id: response.data.id, 
                     role: response.data.role,
+                    approval: response.data.broker_approval,
                     status: true,
                 });
                 navigate("/");
@@ -55,11 +60,11 @@ function Login(){
         <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
                 <Form className="formContainer">
                     <label>Email: </label>
-                    <ErrorMessage name="email" component="span" />
+                    <ErrorMessage name="email" component="span" className="spanred"/>
                     <Field className="inputCreatePost" name="email" placeholder="Ex. 123@abc.com"/>
                     
                     <label>password: </label>
-                    <ErrorMessage name="password" component="span" />
+                    <ErrorMessage name="password" component="span" className="spanred"/>
                     <Field className="inputCreatePost" type="password" name="password" placeholder="Your password "/>
                     <button type="submit">Login</button>
                 </Form>

@@ -9,7 +9,7 @@ const { validateToken } = require('../middlewares/AuthMiddleware');
 
 module.exports = {
     add: async (req, res) => {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
         bcrypt.hash(password, 10).then((hash) => {
             Users.create({
                 email: email,
@@ -19,39 +19,45 @@ module.exports = {
                 address: "",
                 city: "",
                 postal: "",
-                role: "buyer",
+                role: role,
                 is_active: 1,
                 broker_approval: "",
                 broker_licence_url: ""
-            }).catch((err) => {
+            }).catch((err) => { 
                 if (err instanceof Sequelize.UniqueConstraintError) {
                     return res.status(400).json({ message: 'Email already exists' });
                 } else {
                     return res.status(500).json({ message: 'Internal Server Error' });
                 }
             });
-            res.json("true");
+            //res.json("true");
         })
     },
     getUserByEmail: async (req, res) => {
         const { email, password } = req.body;
-        const user = await Users.findOne({ where: { email: email } });
-
-        if (!user) {
-            return res.json({ error: "User Doesn't Exist" });
-        }
-        bcrypt.compare(password, user.password).then((match) => {
-            if (!match) {
-                return res.json({ error: "Wrong email And Password Combination" });
+        try{
+            const user = await Users.findOne({ where: { email: email } })
+            if (!user) {
+                return res.json({ error: "User Doesn't Exist" });
             }
-            const JWT_SECRET = process.env.JWT_SECRET;
+            bcrypt.compare(password, user.password).then((match) => {
+                if (!match) {
+                    return res.json({ error: "Wrong email And Password Combination" });
+                }
+                const JWT_SECRET = process.env.JWT_SECRET;
+    
+                const accessToken = sign(
+                    { email: user.email, id: user.id, role: user.role },
+                    JWT_SECRET
+                );
+                res.json({ token: accessToken, role: user.role, email: email, id: user.id, approval: user.broker_approval });
+            });
+        }catch(err){
+            res.json(err);
+            return;
+        };
 
-            const accessToken = sign(
-                { email: user.email, id: user.id, role: user.role },
-                JWT_SECRET
-            );
-            res.json({ token: accessToken, role: user.role, email: email, id: user.id });
-        });
+        
     },
     getAuth: [validateToken, (req, res) => {
         res.json(req.user);
