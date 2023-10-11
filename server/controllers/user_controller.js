@@ -23,14 +23,14 @@ module.exports = {
                 is_active: 1,
                 broker_approval: "",
                 broker_licence_url: ""
-            }).catch((err) => {
+            }).catch((err) => { 
                 if (err instanceof Sequelize.UniqueConstraintError) {
                     return res.status(400).json({ message: 'Email already exists' });
                 } else {
                     return res.status(500).json({ message: 'Internal Server Error' });
                 }
             });
-            res.json("true");
+            //res.json("true");
         })
     },
     getUserByEmail: async (req, res) => {
@@ -50,7 +50,7 @@ module.exports = {
                 { email: user.email, id: user.id, role: user.role },
                 JWT_SECRET
             );
-            res.json({ token: accessToken, role: user.role, email: email, id: user.id });
+            res.json({ token: accessToken, role: user.role, email: email, id: user.id, approval: user.broker_approval });
         });
     },
     getAuth: [validateToken, (req, res) => {
