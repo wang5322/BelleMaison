@@ -40,7 +40,7 @@ function Calculator() {
     return (
       <form onSubmit={(e) => e.preventDefault()}>
         <FormInputGroup
-          text="Home Value  $"
+          text="Price of property  $"
      
           placeholder={"Enter the value of the home"}
           value={homeValue}
@@ -56,7 +56,7 @@ function Calculator() {
           onkeyup={calculateLoanAmount}
         />
         <FormInputGroup
-          text="Loan amount $"
+          text="Mortgage amount $"
 
           placeholder={"Enter your funds"}
           readOnly={true}
@@ -69,7 +69,7 @@ function Calculator() {
           onInput={(e) => setInterestRate(e.target.value)}
         />
         <FormInputGroup
-          text="Loan Duration (years)"
+          text="Amortization years"
           placeholder={"Enter the duration of your loan in years"}
           value={loanDuration}
           onInput={(e) => setLoanDuration(e.target.value)}
@@ -82,7 +82,7 @@ function Calculator() {
         <button
           type="submit"
           onClick={calculateMonthlyPayment}
-          className="btn btn-primary btn-lg w-100 center "
+          className="btn btn-secondary btn-lg w-100 center "
         >
           Calculate
         </button>

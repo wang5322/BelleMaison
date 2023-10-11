@@ -1,4 +1,5 @@
-const { Properties } = require("../models");
+const { Properties, Favorites } = require("../models");
+
 var validator = require("validator");
 
 module.exports = {
@@ -35,7 +36,7 @@ module.exports = {
     try {
       const id = req.params.id;
       const property = await Properties.findOne({
-        where: { id: id },
+        where: { id: id }, include:[Favorites]
       });
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });
@@ -45,7 +46,10 @@ module.exports = {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
+    // const favoriteProperty = await Favorites.findAll({where:{user_id:req.user.id}});
+    // res.json({property: property, favoriteProperty: favoriteProperty});
   },
+
   toggleActive: async (req, res) => {
     try {
       const toggleData = req.body;
