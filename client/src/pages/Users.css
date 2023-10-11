@@ -42,6 +42,10 @@
     background-color: dodgerblue;
 }
 
+.regRadio{
+  margin: 15px;
+}
+
 .spanred {
     color: red;
 }

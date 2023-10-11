@@ -14,14 +14,21 @@ function Registration(){
     const initialValues ={
         email:"",
         password:"",
+        role:"buyer"
     }
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().min(5).max(55).email().required(),
-        password: Yup.string().min(6).max(6).required(),
+        password: Yup.string().min(6).max(8).required(),
+        role: Yup.string().required('Please select a role'),
     });
 
     const onSubmit = (data)=>{
+        console.log("data.role = ", data.role )
+        if(!data.role){
+            alert("Please Select Role!");
+            return;
+        }
         axios.post("http://localhost:3005/api/users", data)
         .then((response)=>{
             if (response.data.error){
@@ -49,6 +56,20 @@ function Registration(){
                     <label>password: </label>
                     <ErrorMessage name="password" component="span" className="spanred"/>
                     <Field className="inputCreatePost" type="password" name="password" placeholder="Your password "/>
+
+                    <div id="my-radio-group">Register as: </div>
+                    <div role="group" aria-labelledby="my-radio-group">
+                        <ErrorMessage name="role" component="span" className="spanred"/>
+                        <label>
+                            <Field type="radio" className='regRadio' name="role" value="buyer" />
+                            Buyer
+                        </label>
+                        <label>
+                            <Field type="radio" className='regRadio' name="role" value="broker" />
+                            Broker
+                        </label>
+                    </div>
+
                     <button type="submit">Register</button>
                 </Form>
             </Formik>

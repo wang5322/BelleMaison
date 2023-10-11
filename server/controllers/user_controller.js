@@ -9,7 +9,7 @@ const { validateToken } = require('../middlewares/AuthMiddleware');
 
 module.exports = {
     add: async (req, res) => {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
         bcrypt.hash(password, 10).then((hash) => {
             Users.create({
                 email: email,
@@ -19,7 +19,7 @@ module.exports = {
                 address: "",
                 city: "",
                 postal: "",
-                role: "buyer",
+                role: role,
                 is_active: 1,
                 broker_approval: "",
                 broker_licence_url: ""
