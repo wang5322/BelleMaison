@@ -3,7 +3,7 @@
     flex-wrap: wrap;
     margin-left: 20rem;
     margin-top: 2rem;
-    z-index: -2;
+
   }
   
   .card {
@@ -24,21 +24,11 @@
   
   .propertyInfo {
     margin-bottom: 1rem;
-    display: flex;
-  }
-  
 
-  .total-reviews {
-    font-size: 0.9rem;
-    margin-left: 10px;
   }
   
   .card-price {
-    display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .bag-icon {
-    color: #535353;
-  }
