@@ -35,23 +35,29 @@ module.exports = {
     },
     getUserByEmail: async (req, res) => {
         const { email, password } = req.body;
-        const user = await Users.findOne({ where: { email: email } });
-
-        if (!user) {
-            return res.json({ error: "User Doesn't Exist" });
-        }
-        bcrypt.compare(password, user.password).then((match) => {
-            if (!match) {
-                return res.json({ error: "Wrong email And Password Combination" });
+        try{
+            const user = await Users.findOne({ where: { email: email } })
+            if (!user) {
+                return res.json({ error: "User Doesn't Exist" });
             }
-            const JWT_SECRET = process.env.JWT_SECRET;
+            bcrypt.compare(password, user.password).then((match) => {
+                if (!match) {
+                    return res.json({ error: "Wrong email And Password Combination" });
+                }
+                const JWT_SECRET = process.env.JWT_SECRET;
+    
+                const accessToken = sign(
+                    { email: user.email, id: user.id, role: user.role },
+                    JWT_SECRET
+                );
+                res.json({ token: accessToken, role: user.role, email: email, id: user.id, approval: user.broker_approval });
+            });
+        }catch(err){
+            res.json(err);
+            return;
+        };
 
-            const accessToken = sign(
-                { email: user.email, id: user.id, role: user.role },
-                JWT_SECRET
-            );
-            res.json({ token: accessToken, role: user.role, email: email, id: user.id, approval: user.broker_approval });
-        });
+        
     },
     getAuth: [validateToken, (req, res) => {
         res.json(req.user);
