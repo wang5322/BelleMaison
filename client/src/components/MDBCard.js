@@ -15,7 +15,7 @@ import './Card.css';
 const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price, features }) => {
     return (
       <>
-        <MDBCard className='card'>
+        <MDBCard className='propCard'>
             <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
                 <MDBCardImage className='card-img' src={img} fluid alt={type} />
                 <a>
