@@ -75,6 +75,19 @@ module.exports = {
         }
     },
 
+    getUserByRole: async(req,res)=>{
+        const role=req.params.role;
+        const user = await Users.findAll({where:{role:role}})
+        .catch((err) => {
+            return res.json(err);
+        });
+    if (!user) {
+        return res.json({ error: "There is no "+{role}  });
+    } else {
+        res.json(user);
+    }
+    }
+
 };
 
 

@@ -43,3 +43,37 @@ plan to do:
 -register page
 -login page
 -add 5 properties record into properties table
+
+=========2023-10-11======
+Xuerun
+1.  Done / not done since last scrum:
+-created mortagage calculator
+-display single property informations and css
+-partially finished like system
+-tried to display images but had problem with get pictures from database
+2. To do until next Scrum:
+-finish like system
+-finish display images
+-start work on brokerlist
+3. Need assistance/ figure things out
+N/A
+Shiyu
+
+1.  Done / not done since last scrum:
+-fixed and modified pictures api to upload multiple pictures at once
+-tried creating UI for uploading image form
+2. To do until next Scrum:
+-finish property upload page
+-add delete for pictures handle
+3. Need assistance / figure things out
+N/A
+
+Jing
+1.  Done / not done since last scrum:
+add register page and login page, add home page
+
+2. To do until next Scrum:
+contunue work on home page, retrive image from S3
+
+3. Need assistance / figure things out
+Modify the arrangement of cards
