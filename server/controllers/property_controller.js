@@ -7,9 +7,9 @@ module.exports = {
     try {
       const property = req.body;
       // TODO: add auth middleware
-      // const userId = req.user.id;
-      // property.broker_id = userId;
-      property.broker_id = 2;
+      const userId = req.user.id;
+      property.broker_id = userId;
+      // property.broker_id = 2;
       if (isValidProperty(property, res)) {
         const addedProperty = await Properties.create(property);
         res.status(201).json(addedProperty);
@@ -37,7 +37,8 @@ module.exports = {
     try {
       const id = req.params.id;
       const property = await Properties.findOne({
-        where: { id: id }, include:[Favorites]
+        where: { id: id },
+        include: [Favorites],
       });
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });

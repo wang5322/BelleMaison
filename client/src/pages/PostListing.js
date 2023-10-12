@@ -5,8 +5,13 @@ import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
 import UploadProp from "../components/uploadProp";
+import { AuthContext } from "../helpers/AuthContext";
+import { useContext } from "react";
 
 function PostListing() {
+  const { setAuthState } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
+
   const [files, setFiles] = useState([]);
 
   const fileSelected = (event) => {
@@ -74,7 +79,8 @@ function PostListing() {
       try {
         const response = await Axios.post(
           "http://localhost:3005/api/properties",
-          values
+          values,
+          { headers: { accessToken: localStorage.getItem("accessToken") } }
         );
         console.log("Property Id is", response.data.id);
         const propertyId = response.data.id;
@@ -99,12 +105,12 @@ function PostListing() {
   return (
     <React.Fragment>
       <Container>
-        <Row mt="2">
-          <h1>Post New Listing</h1>
-        </Row>
         <Row className="justify-content-md-center">
           <Col md="12">
             <Card className="shadow-lg mt-2 d-flex justify-content-center">
+              <Row px="2" mt="5">
+                <h1 class="row mt-3 offset-1">Post New Listing</h1>
+              </Row>
               <Form onSubmit={formik.handleSubmit}>
                 <UploadProp
                   formik={formik}
