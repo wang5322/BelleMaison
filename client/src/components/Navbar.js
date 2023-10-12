@@ -17,6 +17,7 @@ function OffcanvasNavbar() {
       email: "",
       id: 0,
       role: "",
+      approval: 0,
       status: false,
     });
   };

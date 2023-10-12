@@ -6,8 +6,8 @@ const { validateToken } = require("../middlewares/AuthMiddleware");
 
 module.exports = {
     setFavorite: [validateToken, async (req, res) => {
-        const {property_id, user_id} = req.body;
-        //const user_id = req.user.id;
+        const {property_id} = req.body;
+        const user_id = req.user.id;
         const found = await Favorites.findOne({
             where: { property_id: property_id, user_id: user_id },
         }).catch((err)=>{
@@ -19,7 +19,8 @@ module.exports = {
             .catch((err)=>{
                 return res.json(err);
             });
-            res.json({liked: true});
+            // res.json({liked: true});
+            res.json("Liked The Post");
         }else {
             await Favorites.destroy({where: 
                 { property_id: property_id, user_id: user_id }})
