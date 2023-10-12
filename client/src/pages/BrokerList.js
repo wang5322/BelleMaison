@@ -8,20 +8,13 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
 
 function BrokerList() {
-    const [brokerList, setBrokerList]= useState({});
+    const [brokerList, setBrokerList]= useState([]);
     useEffect(()=>{
-        axios.get(`http://localhost:3005/api/users/broker`).then((response)=>{
-         setBrokerList(
-            brokerList.map((broker)=>{
-                if(broker.broker_approval ==1){
-                    return brokerList;
-                }
-            })
-         )
-       
-        
+        axios.get(`http://localhost:3005/api/users/broker`).then((response)=>{         
+         let approvedBrokers = response.data.filter(x=>x.broker_approval==1);
+         setBrokerList(approvedBrokers);
         })
-    })
+    }, [])
   return (
     <Container className="pt-5">
        <Row xs={1} md={2} className="g-4">
