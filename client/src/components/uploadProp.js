@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row, Form, Button, FloatingLabel } from "react-bootstrap";
 import ErrorMessageAlert from "./ErrorMessageAlert";
 
-function uploadProp({ formik, onFileSelected }) {
+function uploadProp({ formik, onFileSelected, property }) {
   return (
     <React.Fragment>
       <Row md="10" className="px-4 py-4 justify-content-md-center mt-3">
@@ -24,6 +24,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="price"
                 onChange={formik.handleChange}
+                value={property ? property.price : ""}
               />
             </FloatingLabel>
           </Form.Group>
@@ -43,6 +44,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="address"
                 onChange={formik.handleChange}
+                value={property ? property.address : ""}
               />
             </FloatingLabel>
           </Form.Group>
@@ -62,6 +64,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="city"
                 onChange={formik.handleChange}
+                value={property ? property.city : ""}
               />
             </FloatingLabel>
           </Form.Group>
@@ -88,6 +91,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="year_built"
                     onChange={formik.handleChange}
+                    value={property ? property.year_built : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -105,6 +109,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="postal"
                     onChange={formik.handleChange}
+                    value={property ? property.postal : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -139,6 +144,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="bedrooms"
                     onChange={formik.handleChange}
+                    value={property ? property.bedrooms : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -157,6 +163,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="bathrooms"
                     onChange={formik.handleChange}
+                    value={property ? property.bathrooms : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -175,6 +182,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="rooms"
                     onChange={formik.handleChange}
+                    value={property ? property.rooms : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -197,6 +205,7 @@ function uploadProp({ formik, onFileSelected }) {
                 name="type"
                 // value={formik.values.type}
                 onChange={formik.handleChange}
+                value={property ? property.type : ""}
               >
                 <option>Select building style</option>
                 <option value="single-family">Single-Family</option>
@@ -231,6 +240,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="lotArea"
                     onChange={formik.handleChange}
+                    value={property ? property.lotArea : ""}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -249,23 +259,25 @@ function uploadProp({ formik, onFileSelected }) {
                     name="parking"
                     // value={formik.values.parking}
                     onChange={formik.handleChange}
+                    value={property ? property.parking : ""}
                   >
                     <option>Select parking number</option>
-                    <option value="0">No drive way</option>
-                    <option value="1">One drive way</option>
-                    <option value="2">Two drive ways</option>
-                    <option value="3">Three drive ways</option>
-                    <option value="4">Four drive ways</option>
+                    <option value="0">No parking spot</option>
+                    <option value="1">One parking spot</option>
+                    <option value="2">Two parking spot</option>
+                    <option value="3">Three parking spot</option>
+                    <option value="4">Four parking spot</option>
                   </Form.Select>
                 </FloatingLabel>
               </Form.Group>
             </Col>
+
             {/* Submit Button              */}
-            <div className="px-2 justify-content-end">
+            {/* <div className="px-2 justify-content-end">
               <Button variant="info" className="col-md-3" type="Submit">
                 Create
               </Button>
-            </div>
+            </div> */}
           </Row>
         </Col>
 
@@ -290,6 +302,7 @@ function uploadProp({ formik, onFileSelected }) {
                 placeholder="Add addtional features in here"
                 name="features"
                 onChange={formik.handleChange}
+                value={property ? property.features : ""}
               />
             </FloatingLabel>
           </Form.Group>
@@ -313,6 +326,7 @@ function uploadProp({ formik, onFileSelected }) {
                 placeholder="Add description for this property"
                 name="description"
                 onChange={formik.handleChange}
+                value={property ? property.description : ""}
               />
             </FloatingLabel>
           </Form.Group>

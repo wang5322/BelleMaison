@@ -42,7 +42,7 @@ function OffcanvasNavbar() {
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="#action2">FindBroker</Nav.Link>
                 <Nav.Link href="#action2">Search</Nav.Link>
-                <Nav.Link href="/postListing">PostListing</Nav.Link>
+                <Nav.Link href="/postProperty">PostProperty</Nav.Link>
 
                 <NavDropdown
                   title="More"

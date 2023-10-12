@@ -1,15 +1,34 @@
 const { Pictures } = require("../models");
 var validator = require("validator");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const crypto = require("crypto");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 module.exports = {
   add: async (req, res) => {
     try {
+      const propertyId = null;
+      const brokerId = null;
+      const isCertificate = 0;
       //TODO: add auth payload(eg: userId, userEmail)
-      const propertyId = req.body.propertyId;
-      console.log("======req.property_id=======", propertyId);
+      if (req.body.propertyId) {
+        propertyId = req.body.propertyId;
+        console.log("======req.property_id=======", propertyId);
+      }
+      if (req.body.brokerId) {
+        brokerId = req.body.brokerId;
+        console.log("======req.broker_id=======", brokerId);
+      }
+      if (req.body.isCertificate) {
+        isCertificate = 1;
+      }
+
+      brokerId = 15; // for testing
+
       // console.log("======req.file==============", req.files);
       // req.file.buffer;
       // console.log("entering add method");
@@ -35,6 +54,8 @@ module.exports = {
           const pictureData = {
             imageName: s3Key,
             property_id: propertyId,
+            broker_id: brokerId,
+            isCertificate: isCertificate,
           };
 
           return await Pictures.create(pictureData);
@@ -89,19 +110,9 @@ module.exports = {
     try {
       const id = req.params.id;
       const pictures = await Pictures.findAll({ where: { property_id: id } });
-
-      // for (const picture of pictures) {
-      //   const getObjectParams = {
-      //     Bucket: req.bucketName,
-      //     Key: picture.imageName,
-      //   };
-      //   // console.log(picture.imageName);
-      //   const command = new GetObjectCommand(getObjectParams);
-      //   const url = await getSignedUrl(req.s3, command, { expiresIn: 3600 });
-      //   picture.imageUrl = url;
-      //   console.log("imageURLofPicture:", picture.imageUrl);
-      // }
-
+      if (!pictures) {
+        res.status(400).json({ message: "Pictures not found" });
+      }
       await Promise.all(
         pictures.map(async (picture) => {
           const getObjectParams = {
@@ -135,7 +146,7 @@ module.exports = {
       const id = req.params.id;
       const pictures = await Pictures.findAll({ where: { broker_id: id } });
       if (!pictures) {
-        res.status(400).json({ message: "Pictures don't exist" });
+        res.status(400).json({ message: "Pictures not found" });
       }
       for (const picture of pictures) {
         const getObjectParams = {
@@ -159,12 +170,23 @@ module.exports = {
   delete: async (req, res) => {
     try {
       const id = req.params.id;
-      const property = await Pictures.findOne({
+      const picture = await Pictures.findOne({
         where: { id: id },
       });
-      if (!property) {
-        res.status(400).json({ message: "Picture doesn't exist" });
+      if (!picture) {
+        res.status(400).json({ message: "Picture not found" });
+        return;
       }
+
+      const params = {
+        Bucket: req.bucketName,
+        Key: picture.imageName,
+      };
+      const command = new DeleteObjectCommand(params);
+      await s3.send(command);
+
+      await Pictures.delete({ where: { id } });
+      res.status(200).send(picture);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
