@@ -2,45 +2,28 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DistanceMatrixService, GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
-import {
-  setKey,
-  setDefaults,
-  setLanguage,
-  setRegion,
-  fromAddress,
-  fromLatLng,
-  fromPlaceId,
-  setLocationType,
-  geocode,
-  RequestType,
-} from "react-geocode";
-import "../Property.css";
+import { setKey, fromAddress } from "react-geocode";
 import Container from 'react-bootstrap/Container';
-// import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-import Calculator from "../components/Calculator";
 import ImageGallery from 'react-image-gallery';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { AuthContext } from "../helpers/AuthContext";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
+import { AuthContext } from "../helpers/AuthContext";
+import Calculator from "../components/Calculator";
+import "../Property.css";
 
 
 const SingleProperty = () => {
-  
   const [pictures, setPictures] = useState([]);
   const { authState } = useContext(AuthContext);
 
   //save favourite
-
   const [liked, setLiked] = useState(false);
-
-  //mortgage calculator
 
   //map
   const { isLoaded } = useJsApiLoader({
@@ -48,23 +31,26 @@ const SingleProperty = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
   });
 
+  // set key for react-geocode
   setKey(process.env.REACT_APP_GOOGLE_API_KEY);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [destination, setDestination] = useState({ lat: 0, lng: 0 });
-  let { id } = useParams();
   const [property, setProperty] = useState({});
+  const [distance, setDistance] = useState(0);
+
+  const id = useParams();
   useEffect(() => {
     axios.get("http://localhost:3005/api/pictures/byProp/6")
       .then((response) => {
-        let pictures = [];
+        let tempPictures = [];
         response.data.forEach(x => {
-          pictures.push({
+          tempPictures.push({
             original: x.imageUrl,
             thumbnail: x.imageUrl,
           })
         });
-
+        setPictures(tempPictures);
       })
       .catch((error) => {
         alert("there is an error");
@@ -79,8 +65,6 @@ const SingleProperty = () => {
       }
       console.log(property);
       const tempAddress = `${res.data.address},${res.data.city}`;
-      // setFavoriteProperty(res.data.favoriteProperty);
-      // console.log(res.data.favoriteProperty);
       return fromAddress(tempAddress);
     }).then((res) => {
       setCenter(res.results[0].geometry.location);
@@ -97,19 +81,16 @@ const SingleProperty = () => {
     axios.post("http://localhost:3005/api/favorites",
       { property_id: property_id },
       { headers: { accessToken: localStorage.getItem("accessToken") } }
-    )
-
-      .then((res) => {
-        setLiked(res.data.liked);
-        if (res.data.liked) {
-          return { ...property, Favorites: [{ ...property.Favorite, user_id: authState.id }] };
-        } else {
-          const likesArray = property.Favorites;
-          likesArray.pop();
-          return { ...property, Favorites: likesArray }
-        }
-
-      });
+    ).then((res) => {
+      setLiked(res.data.liked);
+      if (res.data.liked) {
+        return { ...property, Favorites: [{ ...property.Favorite, user_id: authState.id }] };
+      } else {
+        const likesArray = property.Favorites;
+        likesArray.pop();
+        return { ...property, Favorites: likesArray }
+      }
+    });
   };
 
   return (
@@ -167,7 +148,6 @@ const SingleProperty = () => {
                     <span><BedIcon />Bedrooms: </span>
                     <span>{property.bedrooms}</span>
                   </div>
-
                 </div>
                 <div className="row">
                   <div className="col-lg-4">
@@ -178,19 +158,14 @@ const SingleProperty = () => {
                     <span>Building Style:  </span>
                     <span>{property.type}</span>
                   </div>
-
                   <div className="col-lg-4">
-
                     <span>{property.features}</span>
                   </div>
-
                 </div>
-
               </div>
             </div>
           </Row>
         </Row>
-
 
         <Row>
           <Col md={6}>
@@ -205,15 +180,13 @@ const SingleProperty = () => {
             <h2>result</h2>
           </Col>
         </Row>
-
       </Container>
 
       <Row>
         <Col md={6}>
           <h2>View on Map</h2>
-          <p>distance to John Abott College: </p>
+          <p>distance to John Abott College: {distance}</p>
         </Col>
-
 
         <Col md={6}>
           <div className="SingleProperty">
@@ -239,20 +212,14 @@ const SingleProperty = () => {
                   }}
                   callback={(response) => {
                     const distance = response.rows[0].elements[0].distance;
-                    if (distance) {
-
-                      // console.log(response.rows[0].elements[0].distance.text);
-                    }
+                    if (distance) setDistance(distance.text);
                   }}
                 />
               </GoogleMap>
             )}
           </div>
-
         </Col>
       </Row>
-
-
     </div>
   );
 };
