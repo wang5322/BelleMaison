@@ -15,6 +15,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { AuthContext } from "../helpers/AuthContext";
 import Calculator from "../components/Calculator";
+import BrokerCard from "../components/BrokerCard";
 import "../Property.css";
 
 
@@ -186,6 +187,7 @@ const SingleProperty = () => {
         <Col md={6}>
           <h2>View on Map</h2>
           <p>distance to John Abott College: {distance}</p>
+          
         </Col>
 
         <Col md={6}>

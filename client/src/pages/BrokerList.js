@@ -6,37 +6,46 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
+import BrokerCard from "../components/BrokerCard";
+
 
 function BrokerList() {
-    const [brokerList, setBrokerList]= useState([]);
-    useEffect(()=>{
-        axios.get(`http://localhost:3005/api/users/broker`).then((response)=>{         
-         let approvedBrokers = response.data.filter(x=>x.broker_approval==1);
-         setBrokerList(approvedBrokers);
-        })
-    }, [])
+  const [brokerList, setBrokerList] = useState([]);
+  const [brokerImage, setBrokerImage] = useState([]);
+  useEffect(() => {
+    axios.get(`http://localhost:3005/api/users/broker`).then((response) => {
+      let approvedBrokers = response.data.filter(x => x.broker_approval == 1);
+
+      let brokerId = 0;
+
+      for (let i = 0; i < approvedBrokers.length; i++) {
+        brokerId = approvedBrokers[i].id;
+        axios.get(`http://localhost:3005/api/pictures/byBroker/${brokerId}`).then((res) => {
+          approvedBrokers[i].brokerImage = res.data[0].imageUrl;
+        });
+      }
+
+      setBrokerList(approvedBrokers);
+
+    });
+
+
+  }, [])
   return (
     <Container className="pt-5">
-       <Row xs={1} md={2} className="g-4">
-      {brokerList.map((value, key) =>{
-        return(
-            <Col key={value.id}> 
-            <Card style={{ width: '18rem' }} bg="warning" >
-            <Card.Img variant="left" src="holder.js/100px160" />
-            <Card.Body>
-              <Card.Title>{value.name}</Card.Title>
-              <Card.Text>
-               <span><PhoneIcon/></span> <span>{value.phone}</span> 
-               <span><MailIcon/></span> <span>{value.email}</span>
-              </Card.Text>
-            </Card.Body>
-            </Card>
+      <Row xs={1} md={2} className="g-4">
+        {brokerList.map((value, key) => {
+          return (
+            <Col key={value.id}>
+              
+              <BrokerCard imgUrl={value.brokerImage} name={value.name} phone={value.phone} email={value.email} />
+            
             </Col>
-        
-      ) 
-        
-    })}
-    </Row>
+
+          )
+
+        })}
+      </Row>
     </Container>
   )
 }

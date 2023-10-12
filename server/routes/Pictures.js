@@ -8,7 +8,7 @@ router.post("/", uploadImageMemory, s3Middleware, pictureController.add);
 
 router.get("/byProp/:id", s3Middleware, pictureController.getByProp);
 
-router.get("/byBroker/:id", pictureController.getByBroker);
+router.get("/byBroker/:id", s3Middleware, pictureController.getByBroker);
 
 // router.delete("/byId/:id", pictureController.delete);
 

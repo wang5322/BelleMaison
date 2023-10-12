@@ -133,7 +133,7 @@ module.exports = {
   getByBroker: async (req, res) => {
     try {
       const id = req.params.id;
-      const pictures = await Pictures.findAll({ where: { broker_id: id } });
+      const pictures = await Pictures.findAll({ where: { broker_id: id, isCertificate:null } });
       if (!pictures) {
         res.status(400).json({ message: "Pictures don't exist" });
       }
@@ -154,6 +154,10 @@ module.exports = {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
+    // try{
+    //   const id = req.params.id;
+    //   const pictures = await Pictures.findAll({ where:{broker_id:id,isCertificate:null}});
+    // }
   },
 
   delete: async (req, res) => {
