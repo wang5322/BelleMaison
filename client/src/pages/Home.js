@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import './Home.css';
 import axios from "axios";
-import Card from "../components/Card";
+import Card from "../components/MDBCard";
 
 function Home() {
+    const initValue = {
+        Pictures:{ imageUrl:""}
+    }
 
-    const [listOfProperties, setListOfProperties] = useState([]);
+    const [listOfProperties, setListOfProperties] = useState([initValue]);
 
     useEffect(()=>{
         axios.get("http://localhost:3005/api/properties")
@@ -24,8 +27,9 @@ function Home() {
     return (
         <>
             <div>
-                <div className='p-5 text-center bg-image img-fluid img-norepeat'
+                <div className='p-5 text-center bg-image'
                     style={{ backgroundImage: "url('https://mdbootstrap.com/img/new/slides/041.webp')",
+                    // style={{ backgroundImage: "url('../images/heroImage.jpg')",
                         height: 400 ,
                         backgroundRepeat: 'no-repeat',
                         backgroundSize: 'cover'}}>
@@ -41,19 +45,31 @@ function Home() {
             </div>
             <div className='p-5 '>
                 <h2>Newest list:</h2>
-                {
-                    listOfProperties.map((property, key)=>{
-                        
-                        return(
-                            <>
-                                <section key = {key} className="card-container">
-                                    <Card img={"img"} address={property.address} city={property.city} type={property.type}
-                                        bedrooms={property.bedrooms} bathrooms={property.bathrooms}
-                                        year_built={property.year_built} price={property.price} features={property.features} />
-                                </section>
-                            </>
-                        )}
+                <section className="card-container">
+                    {listOfProperties.map((property, key)=>{
+                        if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
+                            // Access the first picture's imageUrl
+                            const imageUrl = property.Pictures[0].imageUrl;
+                            return(
+                                <>
+                                {console.log("====imageurl=========",imageUrl)}
+                                <Card img={imageUrl} address={property.address} city={property.city} type={property.type}
+                                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
+                                    year_built={property.year_built} price={property.price} features={property.features} />
+                                </>
+                        )}else{
+                            return(
+                                <>
+                                {/* {console.log("====imageurl=========",property.Pictures[0].imageUrl)} */}
+                                <Card img={""} address={property.address} city={property.city} type={property.type}
+                                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
+                                    year_built={property.year_built} price={property.price} features={property.features} />
+                                </>
+                            )
+                        }
+                    }
                     )}
+                </section>
             </div>
         </>
     )
