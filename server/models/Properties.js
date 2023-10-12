@@ -71,6 +71,9 @@ module.exports = (sequelize, DataTypes) => {
     Properties.hasMany(models.Favorites, {
       foreignKey: "property_id",
     });
+    Properties.hasMany(models.Pictures, {
+      foreignKey: "property_id",
+    });
   };
 
   return Properties;

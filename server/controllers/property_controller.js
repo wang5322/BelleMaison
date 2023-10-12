@@ -1,4 +1,4 @@
-const { Properties, Favorites } = require("../models");
+const { Properties, Favorites, Pictures } = require("../models");
 
 var validator = require("validator");
 
@@ -22,7 +22,9 @@ module.exports = {
   //   Display on home Page
   getAll: async (req, res) => {
     try {
-      const properties = await Properties.findAll();
+      const properties = await Properties.findAll({
+         include:[Pictures]
+      });
       if (!properties) {
         res.status(400).json({ message: "Properties don't exist" });
       }
