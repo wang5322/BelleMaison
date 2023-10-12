@@ -8,6 +8,50 @@ module.exports = {
   add: async (req, res) => {
     try {
       //TODO: add auth payload(eg: userId, userEmail)
+      const propertyId = req.body.propertyId;
+      console.log("======req.property_id=======", propertyId);
+      // console.log("======req.file==============", req.files);
+      // req.file.buffer;
+      // console.log("entering add method");
+      const randomImageName = (bytes = 32) =>
+        crypto.randomBytes(bytes).toString("hex");
+
+      // Handling multiple files, iterate over req.files
+      const pictures = await Promise.all(
+        req.files.map(async (file) => {
+          const imageName = randomImageName();
+          const s3Key = `${file.originalname}-${imageName}`;
+
+          const params = {
+            Bucket: req.bucketName,
+            Key: s3Key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          };
+
+          const command = new PutObjectCommand(params);
+          await req.s3.send(command);
+
+          const pictureData = {
+            imageName: s3Key,
+            property_id: propertyId,
+          };
+
+          return await Pictures.create(pictureData);
+        })
+      );
+
+      res.status(201).json(pictures);
+    } catch (error) {
+      console.error("Error in add method:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  // Not implemented yet
+  addSingle: async (req, res) => {
+    try {
+      //TODO: add auth payload(eg: userId, userEmail)
       // const Picture = req.body;
       // console.log("req.body", Picture);
       // console.log("req.file", req.file);

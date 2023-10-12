@@ -9,6 +9,7 @@ module.exports = {
       // TODO: add auth middleware
       // const userId = req.user.id;
       // property.broker_id = userId;
+      property.broker_id = 2;
       if (isValidProperty(property, res)) {
         const addedProperty = await Properties.create(property);
         res.status(201).json(addedProperty);
@@ -83,11 +84,9 @@ module.exports = {
         where: { id: id },
       });
 
-      res
-        .status(200)
-        .json({
-          message: `Propery of id ${id} has been successfully updated.`,
-        });
+      res.status(200).json({
+        message: `Propery of id ${id} has been successfully updated.`,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -152,9 +151,9 @@ function isValidProperty(property, res) {
     });
     return false;
   }
-  if (!validator.isLength(property.year_built, { min: 4, max: 4 })) {
+  if (property.year_built === null || property.year_built <= 0) {
     res.status(400).send({
-      message: "Year must be 4 characters",
+      message: "Year built is required, and must be an integer",
     });
     return false;
   }
