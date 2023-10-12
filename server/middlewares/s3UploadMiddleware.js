@@ -1,5 +1,6 @@
 const { S3Client } = require("@aws-sdk/client-s3");
 const dotenv = require("dotenv");
+console.log("entering s3 UploadMiddleware method");
 
 dotenv.config();
 
