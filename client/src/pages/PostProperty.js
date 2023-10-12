@@ -4,7 +4,7 @@ import { Row, Col, Form, Container, Button } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
-import UploadProp from "../components/uploadProp";
+import UploadProp from "../components/UploadProp";
 
 function PostProperty() {
   const [files, setFiles] = useState([]);

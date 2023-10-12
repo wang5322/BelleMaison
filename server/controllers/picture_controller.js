@@ -11,9 +11,9 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 module.exports = {
   add: async (req, res) => {
     try {
-      const propertyId = null;
-      const brokerId = null;
-      const isCertificate = 0;
+      let propertyId = null;
+      let brokerId = null;
+      let isCertificate = 0;
       //TODO: add auth payload(eg: userId, userEmail)
       if (req.body.propertyId) {
         propertyId = req.body.propertyId;

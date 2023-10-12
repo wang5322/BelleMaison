@@ -3,22 +3,22 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { Row, Container } from "react-bootstrap";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function PropUpdateImageList({ pictures, setPictures }) {
-  const navigate = useNavigate();
-  const [updatedPictures, setUpdatedPictures] = useState([]);
+  //   const navigate = useNavigate();
+  //   const [updatedPictures, setUpdatedPictures] = useState([]);
 
   const deleteImage = (id) => {
     console.log("image deleted");
     Axios.delete(`http://localhost:3005/api/pictures/${id}`)
       .then((response) => {
         const deletedPicId = response.data.id;
-        setUpdatedPictures(
-          pictures.filter((picture) => picture.id !== deletedPicId)
+        const updated = pictures.filter(
+          (picture) => picture.id !== deletedPicId
         );
-        setPictures(updatedPictures);
-        setUpdatedPictures([]);
+
+        setPictures(updated);
       })
       .catch((error) => {
         if (error.response && error.response.data.message) {
@@ -53,7 +53,13 @@ function PropUpdateImageList({ pictures, setPictures }) {
                 />
 
                 <Card.Body className="justify-content-end">
-                  <Button variant="dark" type="submit">
+                  <Button
+                    variant="dark"
+                    type="submit"
+                    onClickCapture={() => {
+                      deleteImage(picture.id);
+                    }}
+                  >
                     Delete
                   </Button>
                 </Card.Body>

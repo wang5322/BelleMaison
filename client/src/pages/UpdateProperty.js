@@ -4,7 +4,7 @@ import { Row, Col, Form, Container, Button } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
-import UploadProp from "../components/uploadProp";
+import UploadProp from "../components/UploadProp";
 import { useParams } from "react-router-dom";
 import PropUpdateImageList from "../components/PropUpdateImageList";
 
@@ -77,20 +77,23 @@ function UpdateProperty() {
       console.log("Property values are:", values);
       // TODO: use update
       try {
-        const response = await Axios.put(
+        await Axios.put(
           `http://localhost:3005/api/properties/byId/${id}`,
           values,
           { headers: { accessToken: localStorage.getItem("accessToken") } }
         );
-        console.log("Property Id is", response.data.id);
-        const propertyId = response.data.id;
-        formData.append("propertyId", propertyId);
+        if (files) {
+          console.log("Property Id is", id);
+          const propertyId = id;
+          formData.append("propertyId", propertyId);
 
-        await Axios.post("http://localhost:3005/api/pictures", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+          await Axios.post("http://localhost:3005/api/pictures", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-        setFiles([]);
+          setFiles([]);
+          window.location.reload();
+        }
       } catch (error) {
         if (error.response && error.response.data.message) {
           // TODO: Replace with modal
