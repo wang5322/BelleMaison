@@ -19,8 +19,8 @@ module.exports = {
             .catch((err)=>{
                 return res.json(err);
             });
-            // res.json({liked: true});
-            res.json("Liked The Post");
+            res.json({liked: true});
+           
         }else {
             await Favorites.destroy({where: 
                 { property_id: property_id, user_id: user_id }})

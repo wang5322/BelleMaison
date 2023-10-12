@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Navbar2 from "./components/Navbar";
 import { AuthContext } from './helpers/AuthContext';
 import "bootstrap/dist/css/bootstrap.min.css";
+import BrokerList from "./pages/BrokerList";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -31,6 +32,7 @@ function App() {
             <Route path="/property" exact element={<SingleProperty />} />
             <Route path="/register" exact element={<Registration />} />
             <Route path="/login" exact element={<Login />} /> 
+            <Route path="/brokerList" exact element={<BrokerList />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
