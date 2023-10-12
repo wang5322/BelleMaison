@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { Row, Container } from "react-bootstrap";
+import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function PropUpdateImageList({ pictures }) {
-  const deleteImage = () => {
+function PropUpdateImageList({ pictures, setPictures }) {
+  const navigate = useNavigate();
+  const [updatedPictures, setUpdatedPictures] = useState([]);
+
+  const deleteImage = (id) => {
     console.log("image deleted");
+    Axios.delete(`http://localhost:3005/api/pictures/${id}`)
+      .then((response) => {
+        const deletedPicId = response.data.id;
+        setUpdatedPictures(
+          pictures.filter((picture) => picture.id !== deletedPicId)
+        );
+        setPictures(updatedPictures);
+        setUpdatedPictures([]);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data.message) {
+          // TODO: Replace with modal
+          alert(error.response.data.message);
+        } else {
+          alert("There is an error occurred while uploading property");
+        }
+      });
   };
   return (
     <React.Fragment>
@@ -31,7 +53,7 @@ function PropUpdateImageList({ pictures }) {
                 />
 
                 <Card.Body className="justify-content-end">
-                  <Button variant="dark" type="submit" onSubmit={deleteImage}>
+                  <Button variant="dark" type="submit">
                     Delete
                   </Button>
                 </Card.Body>

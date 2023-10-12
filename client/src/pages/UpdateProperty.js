@@ -114,7 +114,9 @@ function UpdateProperty() {
           alert(`There is an error occured while getting property ${id}`);
         }
       });
-    Axios.get(`http://localhost:3005/api/pictures/byProp/${id}`)
+    Axios.get(`http://localhost:3005/api/pictures/byProp/${id}`, {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    })
       .then((response) => {
         setPictures(response.data);
       })
@@ -151,7 +153,10 @@ function UpdateProperty() {
                   </Button>
                 </div>
               </Form>
-              <PropUpdateImageList pictures={pictures}></PropUpdateImageList>
+              <PropUpdateImageList
+                pictures={pictures}
+                setPictures={setPictures}
+              ></PropUpdateImageList>
             </Card>
           </Col>
         </Row>

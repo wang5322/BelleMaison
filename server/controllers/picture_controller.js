@@ -110,9 +110,7 @@ module.exports = {
     try {
       const id = req.params.id;
       const pictures = await Pictures.findAll({ where: { property_id: id } });
-      if (!pictures) {
-        res.status(400).json({ message: "Pictures not found" });
-      }
+
       await Promise.all(
         pictures.map(async (picture) => {
           const getObjectParams = {
@@ -132,7 +130,7 @@ module.exports = {
           }
         })
       );
-      console.log("Pictures with URLs:", pictures);
+      // console.log("Pictures with URLs:", pictures);
 
       res.status(200).send(pictures);
     } catch (error) {
@@ -183,9 +181,9 @@ module.exports = {
         Key: picture.imageName,
       };
       const command = new DeleteObjectCommand(params);
-      await s3.send(command);
+      await req.s3.send(command);
 
-      await Pictures.delete({ where: { id } });
+      await Pictures.destroy({ where: { id } });
       res.status(200).send(picture);
     } catch (error) {
       console.error(error);
