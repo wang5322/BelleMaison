@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const propertyController = require("../controllers/property_controller");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
-router.post("/", propertyController.add);
+router.post("/", validateToken, propertyController.add);
 
 router.get("/", propertyController.getAll);
 

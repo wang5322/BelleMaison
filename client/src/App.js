@@ -1,11 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  NavLink,
-} from "react-router-dom"; // Switch is replaced by Routes
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Switch is replaced by Routes
 import TestPicture from "./pages/TestPicture";
 import SingleProperty from "./pages/SingleProperty";
 import Registration from "./pages/Registration";
