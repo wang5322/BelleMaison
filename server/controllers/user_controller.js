@@ -84,11 +84,11 @@ module.exports = {
         .catch((err) => {
             return res.json(err);
         });
-    if (!user) {
-        return res.json({ error: "There is no "+{role}  });
-    } else {
-        res.json(user);
-    }
+        if (user.length === 0) {
+            return res.json({ error: "There is no "+{role}  });
+        } else {
+            res.json(user);
+        }
     }
 
 };
