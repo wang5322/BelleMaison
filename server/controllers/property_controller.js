@@ -24,9 +24,11 @@ module.exports = {
   //   Display on home Page
   getAll: async (req, res) => {
     try {
-      const properties = await Properties.findAll({
+      const properties = await Properties.findAll(
+        {
          include:[Pictures]
-      });
+      }
+      );
       if (!properties) {
         res.status(400).json({ message: "Properties don't exist" });
       }
@@ -35,13 +37,10 @@ module.exports = {
       await Promise.all(
         properties.map(async (property) => {
           const picture = await pictureController.getByPropForHome(req, res, property.id);
-
-//console.log("=========picture========",picture);
           if (picture) {
-            property.Pictures = picture;
-//console.log("========property=========",property);
+            property.Pictures = [picture];
           } else {
-            property.Pictures = null; // If there's no picture, add an empty array
+            property.Pictures = []; // If there's no picture, add an empty array
           }
         })
       )
