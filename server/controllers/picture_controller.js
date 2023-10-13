@@ -217,6 +217,23 @@ module.exports = {
     // }
   },
 
+  getPicUrlFromS3: async (req, imageName) => {
+    const getObjectParams = {
+      Bucket: req.bucketName,
+      Key: imageName,
+    };
+    const command = new GetObjectCommand(getObjectParams);
+
+    try {
+      const url = await getSignedUrl(req.s3, command, {
+        expiresIn: 3600,
+      });
+      return url;
+    } catch (error) {
+      console.error("==========Error generating signed URL:", error);
+    }
+},
+
   delete: async (req, res) => {
     try {
       const id = req.params.id;

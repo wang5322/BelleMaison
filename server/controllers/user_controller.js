@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 const { Sequelize } = require('sequelize');
 const { Users, Pictures } = require('../models');
+const pictureController = require("./picture_controller");
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 
 const { validateToken } = require('../middlewares/AuthMiddleware');
-const pictureController = require("./picture_controller");
 
 module.exports = {
     add: async (req, res) => {
-       const { email, password, role } = req.body;
+        const { email, password, role } = req.body;
         bcrypt.hash(password, 10).then((hash) => {
             Users.create({
                 email: email,
@@ -35,7 +35,6 @@ module.exports = {
         })
     },
     getUserByEmail: async (req, res) => {
-
         const { email, password } = req.body;
         try {
             const user = await Users.findOne({ where: { email: email } })
@@ -62,11 +61,9 @@ module.exports = {
 
     },
     getAuth: [validateToken, (req, res) => {
-
         res.json(req.user);
     }],
     getById: async (req, res) => {
-
         const id = req.params.id;
         const user = await Users.findOne({ where: { id: id } })
             .catch((err) => {
@@ -80,30 +77,23 @@ module.exports = {
     },
 
     getUserByRole: async (req, res) => {
-        const role = req.params.role;
-        
-        const users = await Users.findAll({ where: { role: role }, include: [Pictures] })
-            .catch((err) => {
+        const users = await Users.findAll({ 
+            where: { role: "broker", broker_approval: 1 }, 
+            include: [Pictures],
+        }).catch((err) => {
                 return res.json(err);
             });
         if (!users) {
             return res.json({ error: "There is no " + { role } });
-        } 
-
-        await Promise.all(
-            users.map(async(user)=>{
-                const picture = await pictureController.getByBroker(req,res,user.id);
-                if(picture){
-                    user.Pictures=[picture];
-                
-                }else{
-                    user.Pictures=[];
+        } else {
+            for (let i=0; i<users.length; i++) {
+                for (let j=0; j<users[i].Pictures.length; j++) {
+                    users[i].Pictures[j].imageUrl = await pictureController.getPicUrlFromS3(req, users[i].Pictures[j].imageName);
                 }
-            })
-        )
-        res.status(200).json(users);
-    }   
-
+            }
+            return res.json(users);
+        }
+    }
 };
 
 

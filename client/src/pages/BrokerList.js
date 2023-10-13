@@ -11,26 +11,19 @@ import BrokerCard from "../components/BrokerCard";
 
 function BrokerList() {
   const [brokerList, setBrokerList] = useState([]);
+
   useEffect(() => {
     axios.get(`http://localhost:3005/api/users/byRole/broker`).then((response) => {
-      let approvedBrokers = response.data.filter(x => x.broker_approval == 1);
-      setBrokerList(approvedBrokers);
-    })
-    .catch((err)=>{
-      if(err.approvedBrokers.status !==404){
-        alert("no registed broker available");
-        return;
-      }
-    })
+      setBrokerList(response.data);
+    });
   }, []);
 
   return (
     <Container className="pt-5">
       <Row xs={1} md={2} className="g-4">
-        {brokerList.map((value, key) => {
+        {brokerList?.map((value, key) => {
           return (
-            <Col key={value.id}>   
-              {console.log(value)}           
+            <Col key={value.id}>              
               <BrokerCard imgUrl={value.Pictures[0]?.imageUrl} name={value.name} phone={value.phone} email={value.email} />
             </Col>
           )
@@ -40,4 +33,4 @@ function BrokerList() {
   )
 }
 
-export default BrokerList
+export default BrokerList;
