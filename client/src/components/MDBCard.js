@@ -21,7 +21,7 @@ const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price
         <MDBCard className='propCard' >
             <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
                 {img!=="notFound" && 
-                    <img className='card-img' src={img} fluid alt={type} 
+                    <img className='card-img' src={img} alt={type} 
                       onError={({currentTarget})=>{
                         currentTarget.onerror=null; 
                         currentTarget.src='https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'}} />}

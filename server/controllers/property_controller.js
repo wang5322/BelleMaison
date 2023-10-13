@@ -34,16 +34,22 @@ module.exports = {
       }
       
       // Call the getByProp method from picture_controller for each property
-      await Promise.all(
-        properties.map(async (property) => {
-          const picture = await pictureController.getByPropForHome(req, res, property.id);
-          if (picture) {
-            property.Pictures = [picture];
-          } else {
-            property.Pictures = []; // If there's no picture, add an empty array
-          }
-        })
-      )
+      // await Promise.all(
+      //   properties.map(async (property) => {
+      //     const picture = await pictureController.getByPropForHome(req, res, property.id);
+      //     if (picture) {
+      //       property.Pictures = [picture];
+      //     } else {
+      //       property.Pictures = []; // If there's no picture, add an empty array
+      //     }
+      //   })
+      // )
+
+      for (let i=0; i<properties.length; i++) {
+        for (let j=0; j<properties[i].Pictures.length; j++) {
+          properties[i].Pictures[j].imageUrl = await pictureController.getPicUrlFromS3(req, properties[i].Pictures[j].imageName);
+        }
+    }
       res.status(200).json(properties);
 
     } catch (error) {

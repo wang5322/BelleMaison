@@ -27,16 +27,14 @@ function Home() {
             const imageUrl = property.Pictures[0].imageUrl;
             return(
                <>
-               {console.log("1====imageurl=========",imageUrl)}
-               <Card img={imageUrl} address={property.address} city={property.city} type={property.type}
+               <Card key={key} img={imageUrl} address={property.address} city={property.city} type={property.type}
                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
                    year_built={property.year_built} price={property.price} features={property.features} />
                </>
         )}else{
             return(
                <>
-               {console.log("2====imageurl=========",property)}
-               <Card img={'notFound'} address={property.address} city={property.city} type={property.type}
+               <Card key={key} img={'notFound'} address={property.address} city={property.city} type={property.type}
                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
                    year_built={property.year_built} price={property.price} features={property.features} />
                </>

@@ -175,7 +175,7 @@ module.exports = {
           console.error("==========Error generating signed URL:", error);
         }
       }
-      return picture;
+      return url;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
