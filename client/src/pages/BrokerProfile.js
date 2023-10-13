@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Card, FloatingLabel, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Axios from "axios";
 import { useParams } from "react-router-dom";
 import "../css/main.css";
+import { AuthContext } from "../helpers/AuthContext";
 
 function BrokerProfile() {
-  const { id } = useParams();
+  //   const { id } = useParams();
   const [broker, setBroker] = useState({});
   const [files, setFiles] = useState([]);
   const [profile, setProfile] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const { authstate } = useContext(AuthContext);
+  const id = authstate.id;
 
   const fileSelected = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -55,10 +58,10 @@ function BrokerProfile() {
       .then((response) => {
         setBroker(response.data);
         const profileUrl = response.data.Pictures[0].imageUrl;
-        for(let i=0;i<response.data.Pictures.length;i++){
-            if(isnull(response.data.Pictures[i].isCertificate)){
-              setProfile(profileUrl);
-            }
+        for (let i = 0; i < response.data.Pictures.length; i++) {
+          if (isnull(response.data.Pictures[i].isCertificate)) {
+            setProfile(profileUrl);
+          }
         }
         setProfile(profileUrl);
 
@@ -160,7 +163,15 @@ function BrokerProfile() {
                     alignItems: "center",
                   }}
                 >
-                  <img className="profile" src={profile} alt="Selected" />
+                  <img
+                    className="profile"
+                    src={
+                      profile
+                        ? { profile }
+                        : "https://cdn.vectorstock.com/i/preview-1x/21/23/avatar-photo-default-user-icon-person-image-vector-47852123.jpg"
+                    }
+                    alt="Selected"
+                  />
                 </div>
                 {profile ? (
                   <Button onClick={handleProfileShow}>Modify Profile</Button>
