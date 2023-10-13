@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import PostProperty from "./pages/PostProperty";
 import BrokerList from "./pages/BrokerList";
 import BuyerProfile from "./pages/BuyerProfile";
+import BrokerProfile from "./pages/BrokerProfile";
 import Navbar2 from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -42,8 +43,13 @@ function App() {
               exact
               element={<UpdateProperty />}
             />
-            <Route path="/myProfile/user" exact element={<BuyerProfile />}/>
+            <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             {/* <Route path="/myProfile/broker" exact element={<BrokerProfile />}/> */}
+            <Route
+              path="/myProfile/broker/:id"
+              exact
+              element={<BrokerProfile />}
+            />
           </Routes>
         </Router>
       </AuthContext.Provider>

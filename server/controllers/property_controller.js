@@ -1,14 +1,12 @@
 const { Properties, Favorites, Pictures } = require("../models");
 const pictureController = require("./picture_controller");
 
-
 var validator = require("validator");
 
 module.exports = {
   add: async (req, res) => {
     try {
       const property = req.body;
-      // TODO: add auth middleware
       const userId = req.user.id;
       property.broker_id = userId;
       // property.broker_id = 2;
@@ -24,28 +22,31 @@ module.exports = {
   //   Display on home Page
   getAll: async (req, res) => {
     try {
-      const properties = await Properties.findAll(
-        {
-         include:[Pictures]
-      }
-      );
-      if (properties.length===0) {
+      const properties = await Properties.findAll({
+        include: [Pictures],
+      });
+      if (properties.length === 0) {
         res.status(400).json({ message: "Properties don't exist" });
       }
-      
+
       // Call the getByProp method from picture_controller for each property
       await Promise.all(
         properties.map(async (property) => {
-          const picture = await pictureController.getByPropForHome(req, res, property.id);
+          const picture = await pictureController.getByPropForHome(
+            req,
+            res,
+            property.id
+          );
+
+          //console.log("=========picture========",picture);
           if (picture) {
             property.Pictures = [picture];
           } else {
             property.Pictures = []; // If there's no picture, add an empty array
           }
         })
-      )
+      );
       res.status(200).json(properties);
-
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
