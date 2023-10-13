@@ -141,10 +141,10 @@ module.exports = {
   //use bu home page, for get only one property image.
   getByPropForHome: async (req, res, propertyId) => {
     try {
-console.log("=======getByPropForHome propertyId===========",propertyId);
+      console.log("=======getByPropForHome propertyId===========", propertyId);
       const picture = await Pictures.findOne({
-         where: { property_id: propertyId },
-         order: [['id','ASC']],
+        where: { property_id: propertyId },
+        order: [["id", "ASC"]],
       });
       if (picture) {
         const getObjectParams = {
@@ -152,29 +152,33 @@ console.log("=======getByPropForHome propertyId===========",propertyId);
           Key: picture.imageName,
         };
         const command = new GetObjectCommand(getObjectParams);
-  
+
         try {
           const url = await getSignedUrl(req.s3, command, {
             expiresIn: 3600,
           });
           picture.imageUrl = url;
           const id = picture.id;
-//console.log("==========id===========",id);
-//console.log("==========url===========",url);
-          Pictures.update({ imageUrl: url }, {
-            where: { id: id }
-          })
+          //console.log("==========id===========",id);
+          //console.log("==========url===========",url);
+          Pictures.update(
+            { imageUrl: url },
+            {
+              where: { id: id },
+            }
+          )
             .then((result) => {
               if (result[0] === 1) {
-                console.log(`=======Successfully updated imageUrl for record with id ${targetId}`);
+                console.log(
+                  `=======Successfully updated imageUrl for record with id ${targetId}`
+                );
               } else {
                 console.log(`=======No records with id ${targetId} found`);
               }
             })
             .catch((error) => {
-              console.error('=======Error updating imageUrl:', error);
+              console.error("=======Error updating imageUrl:", error);
             });
-          
         } catch (error) {
           console.error("==========Error generating signed URL:", error);
         }
