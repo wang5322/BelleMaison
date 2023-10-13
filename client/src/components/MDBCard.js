@@ -9,7 +9,8 @@ import {
   MDBRipple
 } from 'mdb-react-ui-kit';
 import './Card.css';
-
+import BedIcon from '@mui/icons-material/Bed';
+import BathtubIcon from '@mui/icons-material/Bathtub';
 
 
 const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price, features }) => {
@@ -29,7 +30,9 @@ const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price
 
                         <p>{type} Built at: {year_built}</p>
                         <p>{address} , {city}</p>
-                        <p>bedrooms: {bedrooms} , bathrooms: {bathrooms}</p>
+                        {/* <p>bedrooms: {bedrooms} , bathrooms: {bathrooms}</p> */}
+                        <span><BedIcon />Bedrooms: {bedrooms}</span><br></br>
+                        <span><BathtubIcon />Bathrooms: {bathrooms} </span>
                         {/* <p>{features}</p> */}
                     
                 </div>
