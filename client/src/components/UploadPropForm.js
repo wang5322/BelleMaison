@@ -1,8 +1,30 @@
-import React from "react";
-import { Col, Row, Form, Button, FloatingLabel } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Col, Row, Form, FloatingLabel } from "react-bootstrap";
 import ErrorMessageAlert from "./ErrorMessageAlert";
+// test commit
+function UploadPropForm({ formik, onFileSelected, property }) {
+  useEffect(() => {
+    // Set property.price as the initial value when the component mounts
+    formik.setValues({
+      ...formik.values,
+      price: property ? property.price : "",
+      address: property ? property.address : "",
+      city: property ? property.city : "",
+      year_built: property ? property.year_built : "",
+      postal: property ? property.postal : "",
+      bedrooms: property ? property.bedrooms : 0,
+      bathrooms: property ? property.bathrooms : 0,
+      rooms: property ? property.rooms : 0,
+      type: property ? property.type : "",
+      lotArea: property ? property.lotArea : "",
+      parking: property ? property.parking : 0,
+      features: property ? property.features : "",
+      description: property ? property.description : "",
+    });
 
-function uploadProp({ formik, onFileSelected }) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [property]);
+
   return (
     <React.Fragment>
       <Row md="10" className="px-4 py-4 justify-content-md-center mt-3">
@@ -24,6 +46,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="price"
                 onChange={formik.handleChange}
+                value={formik.values.price}
               />
             </FloatingLabel>
           </Form.Group>
@@ -43,6 +66,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="address"
                 onChange={formik.handleChange}
+                value={formik.values.address}
               />
             </FloatingLabel>
           </Form.Group>
@@ -62,6 +86,7 @@ function uploadProp({ formik, onFileSelected }) {
                 type="text"
                 name="city"
                 onChange={formik.handleChange}
+                value={formik.values.city}
               />
             </FloatingLabel>
           </Form.Group>
@@ -88,6 +113,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="year_built"
                     onChange={formik.handleChange}
+                    value={formik.values.year_built}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -105,6 +131,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="postal"
                     onChange={formik.handleChange}
+                    value={formik.values.postal}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -139,6 +166,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="bedrooms"
                     onChange={formik.handleChange}
+                    value={formik.values.bedrooms}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -157,6 +185,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="bathrooms"
                     onChange={formik.handleChange}
+                    value={formik.values.bathrooms}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -175,6 +204,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="rooms"
                     onChange={formik.handleChange}
+                    value={formik.values.rooms}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -197,6 +227,7 @@ function uploadProp({ formik, onFileSelected }) {
                 name="type"
                 // value={formik.values.type}
                 onChange={formik.handleChange}
+                value={formik.values.type}
               >
                 <option>Select building style</option>
                 <option value="single-family">Single-Family</option>
@@ -231,6 +262,7 @@ function uploadProp({ formik, onFileSelected }) {
                     type="text"
                     name="lotArea"
                     onChange={formik.handleChange}
+                    value={formik.values.lotArea}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -249,23 +281,25 @@ function uploadProp({ formik, onFileSelected }) {
                     name="parking"
                     // value={formik.values.parking}
                     onChange={formik.handleChange}
+                    value={formik.values.parking}
                   >
                     <option>Select parking number</option>
-                    <option value="0">No drive way</option>
-                    <option value="1">One drive way</option>
-                    <option value="2">Two drive ways</option>
-                    <option value="3">Three drive ways</option>
-                    <option value="4">Four drive ways</option>
+                    <option value="0">No parking spot</option>
+                    <option value="1">One parking spot</option>
+                    <option value="2">Two parking spot</option>
+                    <option value="3">Three parking spot</option>
+                    <option value="4">Four parking spot</option>
                   </Form.Select>
                 </FloatingLabel>
               </Form.Group>
             </Col>
+
             {/* Submit Button              */}
-            <div className="px-2 justify-content-end">
+            {/* <div className="px-2 justify-content-end">
               <Button variant="info" className="col-md-3" type="Submit">
                 Create
               </Button>
-            </div>
+            </div> */}
           </Row>
         </Col>
 
@@ -290,6 +324,7 @@ function uploadProp({ formik, onFileSelected }) {
                 placeholder="Add addtional features in here"
                 name="features"
                 onChange={formik.handleChange}
+                value={formik.values.features}
               />
             </FloatingLabel>
           </Form.Group>
@@ -313,6 +348,7 @@ function uploadProp({ formik, onFileSelected }) {
                 placeholder="Add description for this property"
                 name="description"
                 onChange={formik.handleChange}
+                value={formik.values.description}
               />
             </FloatingLabel>
           </Form.Group>
@@ -333,4 +369,4 @@ function uploadProp({ formik, onFileSelected }) {
   );
 }
 
-export default uploadProp;
+export default UploadPropForm;

@@ -10,6 +10,6 @@ router.get("/byProp/:id", s3Middleware, pictureController.getByProp);
 
 router.get("/byBroker/:id", s3Middleware, pictureController.getByBroker);
 
-// router.delete("/byId/:id", pictureController.delete);
+router.delete("/:id", s3Middleware, pictureController.delete);
 
 module.exports = router;

@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import { Row, Col, Form, Container } from "react-bootstrap";
+import { Row, Col, Form, Container, Button } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
-import UploadProp from "../components/uploadProp";
-import { AuthContext } from "../helpers/AuthContext";
-import { useContext } from "react";
+import UploadPropForm from "../components/UploadPropForm";
+import { useParams } from "react-router-dom";
+import PropUpdateImageList from "../components/PropUpdateImageList";
 
-function PostListing() {
-  const { setAuthState } = useContext(AuthContext);
-  const { authState } = useContext(AuthContext);
-
+function UpdateProperty() {
+  let { id } = useParams();
   const [files, setFiles] = useState([]);
+  const [property, setProperty] = useState({});
+  const [pictures, setPictures] = useState([]);
 
   const fileSelected = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -75,22 +75,25 @@ function PostListing() {
       });
       console.log("button clicked");
       console.log("Property values are:", values);
-
+      // TODO: use update
       try {
-        const response = await Axios.post(
-          "http://localhost:3005/api/properties",
+        await Axios.put(
+          `http://localhost:3005/api/properties/byId/${id}`,
           values,
           { headers: { accessToken: localStorage.getItem("accessToken") } }
         );
-        console.log("Property Id is", response.data.id);
-        const propertyId = response.data.id;
-        formData.append("propertyId", propertyId);
+        if (files) {
+          console.log("Property Id is", id);
+          const propertyId = id;
+          formData.append("propertyId", propertyId);
 
-        await Axios.post("http://localhost:3005/api/pictures", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+          await Axios.post("http://localhost:3005/api/pictures", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-        setFiles([]);
+          setFiles([]);
+          window.location.reload();
+        }
       } catch (error) {
         if (error.response && error.response.data.message) {
           // TODO: Replace with modal
@@ -102,21 +105,61 @@ function PostListing() {
     },
   });
 
+  useEffect(() => {
+    Axios.get(`http://localhost:3005/api/properties/byId/${id}`)
+      .then((response) => {
+        setProperty(response.data);
+      })
+      .catch((error) => {
+        if (error.response.data.message) {
+          alert(error.response.data.message);
+        } else {
+          alert(`There is an error occured while getting property ${id}`);
+        }
+      });
+    Axios.get(`http://localhost:3005/api/pictures/byProp/${id}`, {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    })
+      .then((response) => {
+        setPictures(response.data);
+      })
+      .catch((error) => {
+        if (error.response.data.message) {
+          alert(error.response.data.message);
+        } else {
+          alert(
+            `There is an error occured while getting pictures for property ${id}`
+          );
+        }
+      });
+  }, []);
+
   return (
     <React.Fragment>
       <Container>
         <Row className="justify-content-md-center">
           <Col md="12">
             <Card className="shadow-lg mt-2 d-flex justify-content-center">
-              <Row px="2" mt="5">
-                <h1 class="row mt-3 offset-1">Post New Listing</h1>
+              <Row className="mt-5 px-4">
+                <h1>Upate Property no.{id}</h1>
               </Row>
               <Form onSubmit={formik.handleSubmit}>
-                <UploadProp
+                <UploadPropForm
                   formik={formik}
                   onFileSelected={fileSelected}
-                ></UploadProp>
+                  property={property}
+                ></UploadPropForm>
+
+                <div className="px-2 justify-content-start py-4">
+                  <Button variant="info" className="col-md-3" type="Submit">
+                    Update
+                  </Button>
+                </div>
               </Form>
+              <PropUpdateImageList
+                pictures={pictures}
+                setPictures={setPictures}
+              ></PropUpdateImageList>
             </Card>
           </Col>
         </Row>
@@ -125,4 +168,4 @@ function PostListing() {
   );
 }
 
-export default PostListing;
+export default UpdateProperty;

@@ -6,6 +6,7 @@ import Card from "../components/MDBCard";
 
 function Home() {
     const initValue = {
+
         Pictures:{ imageUrl:""}
     }
 
@@ -44,32 +45,32 @@ function Home() {
                 </div>
             </div>
             <div className='p-5 '>
-                <h2>Newest list:</h2>
-                <section className="card-container">
+                <h2>Newest list: </h2>
+                    <div className="card-container">
                     {listOfProperties.map((property, key)=>{
-                        if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
-                            // Access the first picture's imageUrl
-                            const imageUrl = property.Pictures[0].imageUrl;
-                            return(
+                         if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
+                        //     // Access the first picture's imageUrl
+                             const imageUrl = property.Pictures[0].imageUrl;
+                             return(
                                 <>
                                 {console.log("====imageurl=========",imageUrl)}
                                 <Card img={imageUrl} address={property.address} city={property.city} type={property.type}
                                     bedrooms={property.bedrooms} bathrooms={property.bathrooms}
                                     year_built={property.year_built} price={property.price} features={property.features} />
                                 </>
-                        )}else{
-                            return(
+                         )}else{
+                             return(
                                 <>
-                                {/* {console.log("====imageurl=========",property.Pictures[0].imageUrl)} */}
-                                <Card img={""} address={property.address} city={property.city} type={property.type}
+                                {console.log("====imageurl=========",property.Pictures.imageUrl)}
+                                <Card img={property.Pictures.imageUrl} address={property.address} city={property.city} type={property.type}
                                     bedrooms={property.bedrooms} bathrooms={property.bathrooms}
                                     year_built={property.year_built} price={property.price} features={property.features} />
                                 </>
                             )
+                            }
                         }
-                    }
                     )}
-                </section>
+                </div>
             </div>
         </>
     )

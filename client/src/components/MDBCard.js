@@ -24,14 +24,15 @@ const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price
             </MDBRipple>
             <MDBCardBody>
                 <MDBCardTitle>${price}</MDBCardTitle>
-                <MDBCardText>
-                    <div className="propertyInfo">
-                        <h6>{type} Built at: {year_built}</h6>
-                        <h6>{address} , {city}</h6>
-                        <h6>bedrooms: {bedrooms} , bathrooms: {bathrooms}</h6>
+                <div className="propertyInfo">
+                   
+
+                        <p>{type} Built at: {year_built}</p>
+                        <p>{address} , {city}</p>
+                        <p>bedrooms: {bedrooms} , bathrooms: {bathrooms}</p>
                         {/* <p>{features}</p> */}
-                    </div>
-                </MDBCardText>
+                    
+                </div>
                 {/* <MDBBtn href='#'>Detail</MDBBtn> */}
             </MDBCardBody>
             </MDBCard>
