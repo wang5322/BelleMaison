@@ -55,6 +55,11 @@ function BrokerProfile() {
       .then((response) => {
         setBroker(response.data);
         const profileUrl = response.data.Pictures[0].imageUrl;
+        for(let i=0;i<response.data.Pictures.length;i++){
+            if(isnull(response.data.Pictures[i].isCertificate)){
+              setProfile(profileUrl);
+            }
+        }
         setProfile(profileUrl);
 
         console.log(response.data);

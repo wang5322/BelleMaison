@@ -75,7 +75,7 @@ function Home() {
                         <div className='d-flex justify-content-center align-items-center h-100'>
                             <div className='text-white mb-5'>
                                 <h1 className='mt-5'>{listOfProperties.length} properties in Quebec</h1>
-                                <SearchBar />
+                                <SearchBar placeholder = 'Please input city...' data={listOfProperties}/>
                             </div>
                         </div>
                     </div>
@@ -84,29 +84,7 @@ function Home() {
             <div className='p-5 '>
                 <h2>Newest list: </h2>
                     <div className="card-container">
-                    {/* {listOfProperties.map((property, key)=>{
-                         if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
-                        //     // Access the first picture's imageUrl
-                             const imageUrl = property.Pictures[0].imageUrl;
-                             return(
-                                <>
-                                {console.log("1====imageurl=========",imageUrl)}
-                                <Card img={imageUrl} address={property.address} city={property.city} type={property.type}
-                                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
-                                    year_built={property.year_built} price={property.price} features={property.features} />
-                                </>
-                         )}else{
-                             return(
-                                <>
-                                {console.log("2====imageurl=========",property)}
-                                <Card img={'notFound'} address={property.address} city={property.city} type={property.type}
-                                    bedrooms={property.bedrooms} bathrooms={property.bathrooms}
-                                    year_built={property.year_built} price={property.price} features={property.features} />
-                                </>
-                            )
-                            }
-                        }
-                    )} */}
+
                     {displayProperties}
                     <ReactPaginate
                         previousLabel={"Previous"}
