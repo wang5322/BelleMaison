@@ -4,18 +4,18 @@ import { Card, FloatingLabel, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Axios from "axios";
 import { useParams } from "react-router-dom";
+import "../css/main.css";
 
 function BrokerProfile() {
   const { id } = useParams();
-  const [broker, setBroker] = useState();
+  const [broker, setBroker] = useState({});
   const [files, setFiles] = useState([]);
+  const [profile, setProfile] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
   const fileSelected = (event) => {
     const selectedFiles = Array.from(event.target.files);
     setFiles(selectedFiles);
-    // TODO: add profile photo!!!!!!!================ Start from here!
-    Axios.post();
   };
 
   const handleImageChange = (event) => {
@@ -51,9 +51,21 @@ function BrokerProfile() {
 
   //Get broker info
   useEffect(() => {
-    Axios.get(`http://localhost:3005/api/users/${id}`).then((response) => {
-      setBroker(response.data);
-    });
+    Axios.get(`http://localhost:3005/api/users/${id}`)
+      .then((response) => {
+        setBroker(response.data);
+        const profileUrl = response.data.Pictures[0].imageUrl;
+        setProfile(profileUrl);
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // if (error.response.data.message) {
+        //   handleShow(error.response.data.message);
+        // } else {
+        //   handleShow("There is an error occured while loggin in");
+        // }
+      });
   }, [id]);
 
   const formik = useFormik({
@@ -101,6 +113,8 @@ function BrokerProfile() {
                       name="phone"
                       type="text"
                       className="mb-2"
+                      value={formik.values.phone}
+                      onChange={formik.handleChange}
                     ></Form.Control>
                   </FloatingLabel>
                 </Form.Group>
@@ -129,9 +143,25 @@ function BrokerProfile() {
                   </FloatingLabel>
                 </Form.Group>
               </Col>
-              <Col md={5} className="rightProfilePic">
-                <img alt="" src="" />
-                <Button onClick={handleProfileShow}>Add Profile</Button>
+              <Col md={5} className="rightProfilePic justify-content-center">
+                <div
+                  style={{
+                    width: "200px",
+                    height: "200px",
+                    overflow: "hidden",
+                    borderRadius: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img className="profile" src={profile} alt="Selected" />
+                </div>
+                {profile ? (
+                  <Button onClick={handleProfileShow}>Modify Profile</Button>
+                ) : (
+                  <Button onClick={handleProfileShow}>Add Profile</Button>
+                )}
               </Col>
             </Row>
           </Form>
@@ -168,8 +198,8 @@ function BrokerProfile() {
                 <h2>Selected Profile</h2>
                 <div
                   style={{
-                    width: "200px", // Adjust the width as needed
-                    height: "180px", // Adjust the height as needed
+                    width: "200px",
+                    height: "180px",
                     overflow: "hidden",
                     borderRadius: "50%",
                     display: "flex",
@@ -177,16 +207,7 @@ function BrokerProfile() {
                     alignItems: "center",
                   }}
                 >
-                  <img
-                    src={selectedImage}
-                    alt="Selected"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "50%", // Add this to ensure the image inside is also a circle
-                    }}
-                  />
+                  <img className="profile" src={selectedImage} alt="Selected" />
                 </div>
               </Row>
             )}

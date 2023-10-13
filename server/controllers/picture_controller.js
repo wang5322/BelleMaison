@@ -27,8 +27,6 @@ module.exports = {
         isCertificate = 1;
       }
 
-      brokerId = 15; // for testing
-
       // console.log("======req.file==============", req.files);
       // req.file.buffer;
       // console.log("entering add method");
@@ -182,15 +180,17 @@ module.exports = {
     }
   },
   //   Get broker's profile photo and certificates
-  getByBroker: async (req, res, brokerId=null) => {
+  getByBroker: async (req, res, brokerId = null) => {
     try {
       if (brokerId == null) {
         const id = req.params.id;
       } else {
         const id = brokerId;
       }
-      
-      const pictures = await Pictures.findAll({ where: { broker_id: id, isCertificate:null } });
+
+      const pictures = await Pictures.findAll({
+        where: { broker_id: id, isCertificate: null },
+      });
       if (!pictures) {
         res.status(400).json({ message: "Pictures not found" });
       }
@@ -232,7 +232,7 @@ module.exports = {
     } catch (error) {
       console.error("==========Error generating signed URL:", error);
     }
-},
+  },
 
   delete: async (req, res) => {
     try {

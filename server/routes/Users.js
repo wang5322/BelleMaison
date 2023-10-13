@@ -11,7 +11,7 @@ router.get("/byRole/broker", s3Middleware, userController.getUserByRole);
 
 router.post("/login", userController.getUserByEmail);
 
-router.get("/:id", userController.getById);
+router.get("/:id", s3Middleware, userController.getById);
 // router.put("/byId/:id", userController.update);
 
 module.exports = router;
