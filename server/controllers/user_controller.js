@@ -9,7 +9,7 @@ const { validateToken } = require('../middlewares/AuthMiddleware');
 
 module.exports = {
     add: async (req, res) => {
-        const { email, password, role } = req.body;
+       const { email, password, role } = req.body;
         bcrypt.hash(password, 10).then((hash) => {
             Users.create({
                 email: email,
@@ -34,6 +34,7 @@ module.exports = {
         })
     },
     getUserByEmail: async (req, res) => {
+
         const { email, password } = req.body;
         try{
             const user = await Users.findOne({ where: { email: email } })
@@ -60,9 +61,11 @@ module.exports = {
         
     },
     getAuth: [validateToken, (req, res) => {
+
         res.json(req.user);
     }],
     getById: async (req, res) => {
+
         const id = req.params.id;
         const user = await Users.findOne({ where: { id: id } })
             .catch((err) => {

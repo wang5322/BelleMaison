@@ -130,7 +130,7 @@ module.exports = {
           }
         })
       );
-      console.log("Pictures with URLs:", pictures);
+      //console.log("Pictures with URLs:", pictures);
 
       res.status(200).send(pictures);
     } catch (error) {

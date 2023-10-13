@@ -6,7 +6,7 @@ router.post("/", userController.add);
 
 router.get("/auth", userController.getAuth);
 
-router.get("/:role", userController.getUserByRole);
+router.get("/byRole/:role", userController.getUserByRole);
 
 router.post("/login", userController.getUserByEmail);
 
