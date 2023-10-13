@@ -4,7 +4,7 @@ import { Row, Col, Form, Container, Button } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
-import UploadProp from "../components/UploadProp";
+import UploadPropForm from "../components/UploadPropForm";
 
 function PostProperty() {
   const [files, setFiles] = useState([]);
@@ -109,10 +109,10 @@ function PostProperty() {
                 <h1 className="row mt-3 offset-1">Post New Listing</h1>
               </Row>
               <Form onSubmit={formik.handleSubmit}>
-                <UploadProp
+                <UploadPropForm
                   formik={formik}
                   onFileSelected={fileSelected}
-                ></UploadProp>
+                ></UploadPropForm>
                 <div className="px-2 justify-content-start py-4">
                   <Button variant="info" className="col-md-3" type="Submit">
                     Create
