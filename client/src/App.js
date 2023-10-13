@@ -44,12 +44,7 @@ function App() {
               element={<UpdateProperty />}
             />
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
-            {/* <Route path="/myProfile/broker" exact element={<BrokerProfile />}/> */}
-            <Route
-              path="/myProfile/broker/:id"
-              exact
-              element={<BrokerProfile />}
-            />
+            <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
