@@ -57,6 +57,7 @@ Xuerun
 -start work on brokerlist
 3. Need assistance/ figure things out
 N/A
+
 Shiyu
 
 1.  Done / not done since last scrum:
@@ -77,3 +78,39 @@ contunue work on home page, retrive image from S3
 
 3. Need assistance / figure things out
 Modify the arrangement of cards
+
+=========2023-10-12===========
+Xuerun
+1.  Done / not done since last scrum:
+-finish like system
+-finish display images on single property page
+-is able to display brokerlist infor but not images
+2. To do until next Scrum:
+-get broker image and display in brokerlist page
+-start on user profile
+
+3. Need assistance/ figure things out
+N/A
+
+Shiyu
+
+1.  Done / not done since last scrum:
+-finished property upload page
+-linked picture upload and property upload
+2. To do until next Scrum:
+-create property update page
+-add delete picture function
+3. Need assistance / figure things out
+N/A
+
+Jing
+1.  Done / not done since last scrum:
+add role choice when user register
+Modify the arrangement of cards
+
+2. To do until next Scrum:
+get picture for property, modify search component
+
+3. Need assistance / figure things out
+show local image in home page
+add 5 properties record into properties table

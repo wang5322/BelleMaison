@@ -81,21 +81,28 @@ module.exports = {
 
     getUserByRole: async (req, res) => {
         const role = req.params.role;
+        
         const users = await Users.findAll({ where: { role: role }, include: [Pictures] })
             .catch((err) => {
                 return res.json(err);
             });
         if (!users) {
             return res.json({ error: "There is no " + { role } });
-        } else {
-            res.json(users);
-        }
+        } 
 
         await Promise.all(
             users.map(async(user)=>{
+                const picture = await pictureController.getByBroker(req,res,user.id);
+                if(picture){
+                    user.Pictures=[picture];
+                
+                }else{
+                    user.Pictures=[];
+                }
             })
         )
-    }
+        res.status(200).json(users);
+    }   
 
 };
 

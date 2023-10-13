@@ -12,10 +12,16 @@ import BrokerCard from "../components/BrokerCard";
 function BrokerList() {
   const [brokerList, setBrokerList] = useState([]);
   useEffect(() => {
-    axios.get(`http://localhost:3005/api/users/broker`).then((response) => {
+    axios.get(`http://localhost:3005/api/users/byRole/broker`).then((response) => {
       let approvedBrokers = response.data.filter(x => x.broker_approval == 1);
       setBrokerList(approvedBrokers);
-    });
+    })
+    .catch((err)=>{
+      if(err.approvedBrokers.status !==404){
+        alert("no registed broker available");
+        return;
+      }
+    })
   }, []);
 
   return (

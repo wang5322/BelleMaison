@@ -182,9 +182,14 @@ module.exports = {
     }
   },
   //   Get broker's profile photo and certificates
-  getByBroker: async (req, res) => {
+  getByBroker: async (req, res, brokerId=null) => {
     try {
-      const id = req.params.id;
+      if (brokerId == null) {
+        const id = req.params.id;
+      } else {
+        const id = brokerId;
+      }
+      
       const pictures = await Pictures.findAll({ where: { broker_id: id, isCertificate:null } });
       if (!pictures) {
         res.status(400).json({ message: "Pictures not found" });
