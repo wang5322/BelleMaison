@@ -24,9 +24,9 @@ module.exports = {
   //   Display on home Page
   getAll: async (req, res) => {
     try {
-      const properties = await Properties.findAll(
-        { include: [Pictures] }
-     );
+      const properties = await Properties.findAll({
+         include:[Pictures]
+      });
       if (!properties) {
         res.status(400).json({ message: "Properties don't exist" });
       }
@@ -105,9 +105,7 @@ module.exports = {
         where: { id: id },
       });
 
-      res.status(200).json({
-        message: `Propery of id ${id} has been successfully updated.`,
-      });
+      res.status(200).json(updatedProperty);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });

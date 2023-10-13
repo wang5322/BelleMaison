@@ -6,11 +6,12 @@ import SingleProperty from "./pages/SingleProperty";
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import PostListing from "./pages/PostListing";
+import PostProperty from "./pages/PostProperty";
 import Navbar2 from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BrokerList from "./pages/BrokerList";
+import UpdateProperty from "./pages/UpdateProperty";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -33,7 +34,12 @@ function App() {
             <Route path="/register" exact element={<Registration />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/brokerList" exact element={<BrokerList />} />
-            <Route path="/postListing" exact element={<PostListing />} />
+            <Route path="/postProperty" exact element={<PostProperty />} />
+            <Route
+              path="/updateProperty/:id"
+              exact
+              element={<UpdateProperty />}
+            />
           </Routes>
         </Router>
       </AuthContext.Provider>
