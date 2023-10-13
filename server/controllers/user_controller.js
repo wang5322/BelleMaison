@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Sequelize } = require('sequelize');
-const { Users } = require('../models');
+const { Users, Pictures } = require('../models');
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 
 const { validateToken } = require('../middlewares/AuthMiddleware');
+const pictureController = require("./picture_controller");
 
 module.exports = {
     add: async (req, res) => {
@@ -23,7 +24,7 @@ module.exports = {
                 is_active: 1,
                 broker_approval: "",
                 broker_licence_url: ""
-            }).catch((err) => { 
+            }).catch((err) => {
                 if (err instanceof Sequelize.UniqueConstraintError) {
                     return res.status(400).json({ message: 'Email already exists' });
                 } else {
@@ -35,7 +36,7 @@ module.exports = {
     },
     getUserByEmail: async (req, res) => {
         const { email, password } = req.body;
-        try{
+        try {
             const user = await Users.findOne({ where: { email: email } })
             if (!user) {
                 return res.json({ error: "User Doesn't Exist" });
@@ -45,19 +46,19 @@ module.exports = {
                     return res.json({ error: "Wrong email And Password Combination" });
                 }
                 const JWT_SECRET = process.env.JWT_SECRET;
-    
+
                 const accessToken = sign(
                     { email: user.email, id: user.id, role: user.role },
                     JWT_SECRET
                 );
                 res.json({ token: accessToken, role: user.role, email: email, id: user.id, approval: user.broker_approval });
             });
-        }catch(err){
+        } catch (err) {
             res.json(err);
             return;
         };
 
-        
+
     },
     getAuth: [validateToken, (req, res) => {
         res.json(req.user);
@@ -75,17 +76,22 @@ module.exports = {
         }
     },
 
-    getUserByRole: async(req,res)=>{
-        const role=req.params.role;
-        const user = await Users.findAll({where:{role:role}})
-        .catch((err) => {
-            return res.json(err);
-        });
-    if (!user) {
-        return res.json({ error: "There is no "+{role}  });
-    } else {
-        res.json(user);
-    }
+    getUserByRole: async (req, res) => {
+        const role = req.params.role;
+        const users = await Users.findAll({ where: { role: role }, include: [Pictures] })
+            .catch((err) => {
+                return res.json(err);
+            });
+        if (!users) {
+            return res.json({ error: "There is no " + { role } });
+        } else {
+            res.json(users);
+        }
+
+        await Promise.all(
+            users.map(async(user)=>{
+            })
+        )
     }
 
 };

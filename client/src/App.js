@@ -7,10 +7,12 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import PostListing from "./pages/PostListing";
+import BrokerList from "./pages/BrokerList";
+import BuyerProfile from "./pages/BuyerProfile";
 import Navbar2 from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BrokerList from "./pages/BrokerList";
+
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -34,6 +36,8 @@ function App() {
             <Route path="/login" exact element={<Login />} />
             <Route path="/brokerList" exact element={<BrokerList />} />
             <Route path="/postListing" exact element={<PostListing />} />
+            <Route path="/myProfile/user" exact element={<BuyerProfile />}/>
+            {/* <Route path="/myProfile/broker" exact element={<BrokerProfile />}/> */}
           </Routes>
         </Router>
       </AuthContext.Provider>

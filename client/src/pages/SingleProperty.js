@@ -181,8 +181,8 @@ const SingleProperty = () => {
             <h2>result</h2>
           </Col>
         </Row>
-      </Container>
-
+      {/* </Container>
+      <Container className="mt-5 mb-5"> */}
       <Row>
         <Col md={6}>
           <h2>View on Map</h2>
@@ -222,6 +222,7 @@ const SingleProperty = () => {
           </div>
         </Col>
       </Row>
+      </Container>
     </div>
   );
 };
