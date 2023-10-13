@@ -121,9 +121,56 @@ module.exports = {
           }
         })
       );
-      console.log("Pictures with URLs:", pictures);
+      //console.log("=========Pictures with URLs:=============", pictures);
 
       res.status(200).send(pictures);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  //use bu home page, for get only one property image.
+  getByPropForHome: async (req, res, propertyId) => {
+    try {
+console.log("=======getByPropForHome propertyId===========",propertyId);
+      const picture = await Pictures.findOne({
+         where: { property_id: propertyId },
+         order: [['id','ASC']],
+      });
+      if (picture) {
+        const getObjectParams = {
+          Bucket: req.bucketName,
+          Key: picture.imageName,
+        };
+        const command = new GetObjectCommand(getObjectParams);
+  
+        try {
+          const url = await getSignedUrl(req.s3, command, {
+            expiresIn: 3600,
+          });
+          picture.imageUrl = url;
+          const id = picture.id;
+console.log("==========id===========",id);
+console.log("==========url===========",url);
+          Pictures.update({ imageUrl: url }, {
+            where: { id: id }
+          })
+            .then((result) => {
+              if (result[0] === 1) {
+                console.log(`=======Successfully updated imageUrl for record with id ${targetId}`);
+              } else {
+                console.log(`=======No records with id ${targetId} found`);
+              }
+            })
+            .catch((error) => {
+              console.error('=======Error updating imageUrl:', error);
+            });
+          
+        } catch (error) {
+          console.error("==========Error generating signed URL:", error);
+        }
+      }
+      return null;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
