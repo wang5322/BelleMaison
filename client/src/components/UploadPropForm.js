@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { Col, Row, Form, Button, FloatingLabel } from "react-bootstrap";
+import { Col, Row, Form, FloatingLabel } from "react-bootstrap";
 import ErrorMessageAlert from "./ErrorMessageAlert";
 
-function UploadProp({ formik, onFileSelected, property }) {
+function UploadPropForm({ formik, onFileSelected, property }) {
   useEffect(() => {
     // Set property.price as the initial value when the component mounts
     formik.setValues({
@@ -369,4 +369,4 @@ function UploadProp({ formik, onFileSelected, property }) {
   );
 }
 
-export default UploadProp;
+export default UploadPropForm;

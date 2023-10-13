@@ -4,7 +4,7 @@ import { Row, Col, Form, Container, Button } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import Axios from "axios";
 import * as Yup from "yup";
-import UploadProp from "../components/UploadProp";
+import UploadPropForm from "../components/UploadPropForm";
 import { useParams } from "react-router-dom";
 import PropUpdateImageList from "../components/PropUpdateImageList";
 
@@ -144,11 +144,11 @@ function UpdateProperty() {
                 <h1>Upate Property no.{id}</h1>
               </Row>
               <Form onSubmit={formik.handleSubmit}>
-                <UploadProp
+                <UploadPropForm
                   formik={formik}
                   onFileSelected={fileSelected}
                   property={property}
-                ></UploadProp>
+                ></UploadPropForm>
 
                 <div className="px-2 justify-content-start py-4">
                   <Button variant="info" className="col-md-3" type="Submit">
