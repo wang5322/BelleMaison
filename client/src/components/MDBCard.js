@@ -20,26 +20,28 @@ const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price
       <>
         <MDBCard className='propCard' >
             <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
-                {img!=="notFound" && <MDBCardImage className='card-img' src={img} fluid alt={type} />}
-                {img==="notFound" && <img className='card-img' src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" alt={type} />}
-                <a>
+                {img!=="notFound" && 
+                    <img className='card-img' src={img} fluid alt={type} 
+                      onError={({currentTarget})=>{
+                        currentTarget.onerror=null; 
+                        currentTarget.src='https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'}} />}
+                {img==="notFound" && 
+                    <img className='card-img' src='https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg' alt={type} />}
+                {/* <a>
                 <div className='mask' style={{ backgroundColor: 'rgba(251, 251, 251, 0.15)' }}></div>
-                </a>
+                </a> */}
             </MDBRipple>
             <MDBCardBody>
                 <MDBCardTitle>${price}</MDBCardTitle>
                 <div className="propertyInfo">
-                   
-
-                        <p>{type} Built at: {year_built}</p>
-                        <p>{address} , {city}</p>
-                        {/* <p>bedrooms: {bedrooms} , bathrooms: {bathrooms}</p> */}
-                        <span><BedIcon />Bedrooms: {bedrooms}</span><br></br>
-                        <span><BathtubIcon />Bathrooms: {bathrooms} </span>
-                        {/* <p>{features}</p> */}
-                    
+                    <p>{type} Built at: {year_built}</p>
+                    <p>{address} , {city}</p>
+                    {/* <p>bedrooms: {bedrooms} , bathrooms: {bathrooms}</p> */}
+                    <span><BedIcon />Bedrooms: {bedrooms}</span><br></br>
+                    <span><BathtubIcon />Bathrooms: {bathrooms} </span>
+                    {/* <p>{features}</p> */}
                 </div>
-                {/* <MDBBtn href='#'>Detail</MDBBtn> */}
+                <MDBBtn href='/property'>Detail</MDBBtn>
             </MDBCardBody>
             </MDBCard>
       </>
