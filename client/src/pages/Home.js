@@ -3,10 +3,13 @@ import SearchBar from "../components/SearchBar";
 import './Home.css';
 import axios from "axios";
 import Card from "../components/MDBCard";
+import {useNavigate} from 'react-router-dom';
 
 function Home() {
-    const initValue = {
 
+    let navigate = useNavigate();
+
+    const initValue = {
         Pictures:{ imageUrl:""}
     }
 
@@ -50,6 +53,7 @@ function Home() {
                     {listOfProperties.map((property, key)=>{
                          if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
                         //     // Access the first picture's imageUrl
+                        console.log("=========1=========");
                              const imageUrl = property.Pictures[0].imageUrl;
                              return(
                                 <>
@@ -59,10 +63,11 @@ function Home() {
                                     year_built={property.year_built} price={property.price} features={property.features} />
                                 </>
                          )}else{
+                            console.log("=========2=========");
                              return(
                                 <>
-                                {console.log("====imageurl=========",property.Pictures.imageUrl)}
-                                <Card img={property.Pictures.imageUrl} address={property.address} city={property.city} type={property.type}
+                                {console.log("====imageurl=========",property)}
+                                <Card img={'notFound'} address={property.address} city={property.city} type={property.type}
                                     bedrooms={property.bedrooms} bathrooms={property.bathrooms}
                                     year_built={property.year_built} price={property.price} features={property.features} />
                                 </>
