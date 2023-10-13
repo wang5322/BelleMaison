@@ -29,7 +29,7 @@ module.exports = {
          include:[Pictures]
       }
       );
-      if (!properties) {
+      if (properties.length===0) {
         res.status(400).json({ message: "Properties don't exist" });
       }
       
