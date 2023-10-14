@@ -114,3 +114,36 @@ get picture for property, modify search component
 3. Need assistance / figure things out
 show local image in home page
 add 5 properties record into properties table
+
+=========2023-10-13===========
+
+Xuerun
+1.  Done / not done since last scrum:
+-broker image can be displayed in brokerlist page
+
+-is able to display brokerlist infor but not images
+2. To do until next Scrum:
+
+-continue work on user profile
+
+3. Need assistance/ figure things out
+N/A
+Shiyu
+
+1.  Done / not done since last scrum:
+-created broker profile page
+-added delete picture function
+2. To do until next Scrum:
+-finish broker profile page(certificate and property list)
+3. Need assistance / figure things out
+N/A
+Jing
+1.  Done / not done since last scrum:
+get picture for property, modify search component
+add pageNotFound when user input wrong url;
+
+2. To do until next Scrum:
+modify search component
+
+3. Need assistance / figure things out
+none

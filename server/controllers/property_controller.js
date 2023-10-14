@@ -41,11 +41,15 @@ module.exports = {
       //   })
       // )
 
-      for (let i=0; i<properties.length; i++) {
-        for (let j=0; j<properties[i].Pictures.length; j++) {
-          properties[i].Pictures[j].imageUrl = await pictureController.getPicUrlFromS3(req, properties[i].Pictures[j].imageName);
+      for (let i = 0; i < properties.length; i++) {
+        for (let j = 0; j < properties[i].Pictures.length; j++) {
+          properties[i].Pictures[j].imageUrl =
+            await pictureController.getPicUrlFromS3(
+              req,
+              properties[i].Pictures[j].imageName
+            );
         }
-    }
+      }
       res.status(200).json(properties);
     } catch (error) {
       console.error(error);
@@ -70,6 +74,34 @@ module.exports = {
     }
     // const favoriteProperty = await Favorites.findAll({where:{user_id:req.user.id}});
     // res.json({property: property, favoriteProperty: favoriteProperty});
+  },
+
+  getByBroker: async (req, res) => {
+    try {
+      console.log("=======entered property getByBroker method ========");
+      const brokerId = req.user.id;
+      console.log("brokerId=====", brokerId);
+      const properties = await Properties.findAll({
+        where: { broker_id: brokerId },
+        include: [Pictures],
+      });
+      if (properties.length === 0) {
+        res.status(400).json({ message: "Properties don't exist" });
+      }
+      for (let i = 0; i < properties.length; i++) {
+        for (let j = 0; j < properties[i].Pictures.length; j++) {
+          properties[i].Pictures[j].imageUrl =
+            await pictureController.getPicUrlFromS3(
+              req,
+              properties[i].Pictures[j].imageName
+            );
+        }
+      }
+      res.status(200).json(properties);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   },
 
   toggleActive: async (req, res) => {
