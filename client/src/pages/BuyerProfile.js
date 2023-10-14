@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext,useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
@@ -13,8 +13,9 @@ import { Button } from 'react-bootstrap';
 
 function BuyerProfile() {
   const [user, setUser] = useState({});
-  const { id } = useParams();
-
+  //const { id } = useParams();
+  const { authState } = useContext(AuthContext);
+  const id = authState.id;
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const validationSchema = Yup.object().shape({
     name: Yup.string().nullable(),
@@ -29,10 +30,12 @@ function BuyerProfile() {
       { headers: { accessToken: localStorage.getItem("accessToken") } }
     ).then((res) => {
       setUser(res.data);
+      
     })
       .catch((error) => {
         alert("there is an error");
       })
+    
   }, [])
 
   return (
@@ -66,7 +69,7 @@ function BuyerProfile() {
 
         </Form>
       </Formik>
-
+     
 
     </Container>
 
