@@ -76,7 +76,7 @@ function App() {
             />
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
-            {/* <Route path="*" exact element={<PageNotFound />} /> */}
+            <Route path="*" exact element={<PageNotFound />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
