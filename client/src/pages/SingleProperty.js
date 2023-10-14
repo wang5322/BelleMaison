@@ -42,7 +42,7 @@ const SingleProperty = () => {
 
   const {id} = useParams();
   useEffect(() => {
-    axios.get("http://localhost:3005/api/pictures/byProp/6")
+    axios.get(`http://localhost:3005/api/pictures/byProp/${id}`)
       .then((response) => {
         let tempPictures = [];
         response.data.forEach(x => {
