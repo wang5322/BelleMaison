@@ -11,6 +11,7 @@ import BrokerList from "./pages/BrokerList";
 import BuyerProfile from "./pages/BuyerProfile";
 import BrokerProfile from "./pages/BrokerProfile";
 import Navbar2 from "./components/Navbar";
+import PageNotFound from './pages/PageNotFound';
 import { AuthContext } from "./helpers/AuthContext";
 import { useContext } from "react";
 import axios from 'axios';
@@ -23,6 +24,7 @@ function App() {
     email: "",
     id: 0,
     role: "",
+    approval: 0,
     status: false,
   });
 
@@ -74,6 +76,7 @@ function App() {
             />
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

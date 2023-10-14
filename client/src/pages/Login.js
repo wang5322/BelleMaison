@@ -16,7 +16,7 @@ function Login() {
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().min(5).max(55).email().required(),
-    password: Yup.string().min(6).max(6).required(),
+    password: Yup.string().min(6).max(8).required(),
   });
 
   let navigate = useNavigate();
