@@ -8,21 +8,42 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import MailIcon from "@mui/icons-material/Mail";
 import BrokerCard from "../components/BrokerCard";
 
+
+
 function BrokerList() {
   const [brokerList, setBrokerList] = useState([]);
-
+  
   useEffect(() => {
-    axios
-      .get(`http://localhost:3005/api/users/byRole/broker`)
-      .then((response) => {
-        setBrokerList(response.data);
-      });
+    axios.get(`http://localhost:3005/api/users/byRole/broker`).then((response) => {
+      setBrokerList(response.data);
+    })
+    .catch((err)=>{
+      if(err.response.data.status!==404){
+        alert("no records found!");
+        return
+    }
+    })
   }, []);
-
+  const displayBrokers=brokerList.map((value,key)=>{
+    if(Array.isArray(value.Pictures) && value.Pictures.length>0){
+      const imageUrl=value.Pictures[0]?.imageUrl;
+      return(
+         <>
+         <BrokerCard key={key} name={value.name} imgUrl={imageUrl} phone={value.phone} email={value.email}/>
+         </>
+      )
+    }else{
+      return(
+        <>
+        <BrokerCard key={key} name={value.name} imgUrl={'notFound'} phone={value.phone} email={value.email}/>
+        </>
+      )
+    }
+  })
   return (
-    <Container className="pt-5">
-      <Row xs={1} md={2} className="g-4">
-        {brokerList?.map((value, key) => {
+    <div className="card-container" >
+      {/* <Row xs={1} md={2} className="g-4"> */}
+        {/* {brokerList?.map((value, key) => {
           return (
             <Col key={value.id}>
               <BrokerCard
@@ -32,11 +53,15 @@ function BrokerList() {
                 email={value.email}
               />
             </Col>
-          );
-        })}
-      </Row>
-    </Container>
-  );
+          )
+        })} */}
+        {/* <Col>
+      
+        </Col>
+      </Row> */}
+      {displayBrokers}
+    </div>
+  )
 }
 
 export default BrokerList;
