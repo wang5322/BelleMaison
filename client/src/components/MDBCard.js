@@ -12,10 +12,19 @@ import './Card.css';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import {useNavigate} from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 
-const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price, features }) => {
+const Card = ({ id, img, address, city, type, bedrooms, bathrooms, year_built, price, features }) => {
   let navigate = useNavigate();
+
+  const handleNavigate = (id) => {
+    if (id) {
+      navigate(`/property/${id}`);
+    } else {
+      navigate(`/`);
+    }
+  };
     return (
       <>
         <MDBCard className='propCard' >
@@ -41,7 +50,7 @@ const Card = ({ img, address, city, type, bedrooms, bathrooms, year_built, price
                     <span><BathtubIcon />Bathrooms: {bathrooms} </span>
                     {/* <p>{features}</p> */}
                 </div>
-                <MDBBtn href='/property'>Detail</MDBBtn>
+                <Button onClick={() => handleNavigate(id)}>Detail</Button>
             </MDBCardBody>
             </MDBCard>
       </>

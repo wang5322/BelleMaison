@@ -40,7 +40,7 @@ const SingleProperty = () => {
   const [property, setProperty] = useState({});
   const [distance, setDistance] = useState(0);
 
-  const id = useParams();
+  const {id} = useParams();
   useEffect(() => {
     axios.get("http://localhost:3005/api/pictures/byProp/6")
       .then((response) => {
@@ -57,7 +57,7 @@ const SingleProperty = () => {
         alert("there is an error");
       });
 
-    axios.get(`http://localhost:3005/api/properties/byId/6`).then((res) => {
+    axios.get(`http://localhost:3005/api/properties/byId/${id}`).then((res) => {
       setProperty(res.data);
       if (res.data.Favorites[0] && res.data.Favorites[0].user_id == authState.id) {
         setLiked(true);

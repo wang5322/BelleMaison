@@ -64,7 +64,7 @@ function App() {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/testPicture" exact element={<TestPicture />} />
-            <Route path="/property" exact element={<SingleProperty />} />
+            <Route path="/property/:id" exact element={<SingleProperty />} />
             <Route path="/register" exact element={<Registration />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/brokerList" exact element={<BrokerList />} />
@@ -76,7 +76,7 @@ function App() {
             />
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
-            <Route path="*" element={<PageNotFound />} />
+            {/* <Route path="*" exact element={<PageNotFound />} /> */}
           </Routes>
         </Router>
       </AuthContext.Provider>

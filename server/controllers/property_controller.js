@@ -66,11 +66,14 @@ module.exports = {
       });
       if (!property) {
         res.status(400).json({ message: "Property doesn't exist" });
+        return;
       }
       res.status(200).json(property);
+      return;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
+      return;
     }
     // const favoriteProperty = await Favorites.findAll({where:{user_id:req.user.id}});
     // res.json({property: property, favoriteProperty: favoriteProperty});
