@@ -28,10 +28,6 @@ function Login() {
           alert(response.data.error);
         } else {
           localStorage.setItem("accessToken", response.data.token);
-          console.log("email", response.data.email);
-          console.log("id", response.data.id);
-          console.log("role", response.data.role);
-          console.log("approval", response.data.broker_approval);
           setAuthState({
             email: response.data.email,
             id: response.data.id,

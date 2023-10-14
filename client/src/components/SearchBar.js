@@ -40,7 +40,7 @@ function SearchBar({placeholder, data}){
                 <input id="searchInput" type='text' placeholder={placeholder} onChange={handleFilter}></input>
                 <div className='searchIcon'>
 
-                        <SearchIcon onClick={doSearch()} />
+                        {/* <SearchIcon onClick={doSearch()} /> */}
 
                 </div>
             </div>
