@@ -3,7 +3,7 @@
     flex-wrap: wrap; 
     margin-left: 20px;
     margin-top: 10px;
-
+    justify-content: center;
   }
   
   .propCard {
@@ -39,4 +39,10 @@
   
   h6{
     word-wrap: break-word;
+  }
+
+  .brokerImg{
+    margin-bottom: 10px;
+    border-radius: 5px 5px 0 0;
+    height: 310px;
   }

@@ -43,8 +43,8 @@ function App() {
               exact
               element={<UpdateProperty />}
             />
-            <Route path="/myProfile/user" exact element={<BuyerProfile />} />
-            {/* <Route path="/myProfile/broker" exact element={<BrokerProfile />}/> */}
+            <Route path="/myProfile/user/:id" exact element={<BuyerProfile />} />
+            
             <Route
               path="/myProfile/broker/:id"
               exact

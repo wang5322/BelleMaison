@@ -5,7 +5,7 @@ const { Users, Pictures } = require("../models");
 const pictureController = require("./picture_controller");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-
+const validator = require('validator');
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
 module.exports = {
@@ -78,6 +78,7 @@ module.exports = {
     }).catch((err) => {
       return res.json(err);
     });
+
     if (!user) {
       return res.json({ error: "There is no " + { id } });
     } else {
@@ -114,6 +115,13 @@ module.exports = {
       return res.json(users);
     }
   },
+
+  update: async(req,res)=>{
+    const id = req.params.id;
+    const updateUser=await Users.update(req.body,{where:{id:id}});  
+    res.json(updateUser);   
+  }
+
 };
 
 //module.exports = router;
