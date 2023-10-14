@@ -48,15 +48,15 @@ module.exports = {
         const JWT_SECRET = process.env.JWT_SECRET;
 
         const accessToken = sign(
-          { email: user.email, id: user.id, role: user.role },
+          { email: user.email, id: user.id, role: user.role ,approval: user.broker_approval},
           JWT_SECRET
         );
         res.json({
           token: accessToken,
-          role: user.role,
           email: email,
           id: user.id,
           approval: user.broker_approval,
+          role: user.role,
         });
       });
     } catch (err) {
