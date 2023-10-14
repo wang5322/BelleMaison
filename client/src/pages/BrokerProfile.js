@@ -125,8 +125,11 @@ function BrokerProfile() {
           handleShow("There is an error occured while getting broker info");
         }
       });
+
+    Axios.get(`http://localhost:3005/api/properties/byBroker`);
   }, [id]);
 
+  //   TODO: Implement update form
   const formik = useFormik({
     enableReinitialize: true, // Allow the form to reinitialize when initial values change
     initialValues: {
@@ -252,7 +255,10 @@ function BrokerProfile() {
             </Row>
           </Form>
         </Card>
-        <Row className="propertyList"></Row>
+        <Row className="propertyList">
+          <Button>Add porperty</Button>
+          {""}
+        </Row>
         <Row className="certificate"></Row>
 
         {/* Modal rendering */}

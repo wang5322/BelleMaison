@@ -14,4 +14,11 @@ router.patch("/byId/:id", propertyController.toggleActive);
 
 router.put("/byId/:id", propertyController.update);
 
+router.get(
+  "/byBroker",
+  validateToken,
+  s3Middleware,
+  propertyController.getByBroker
+);
+
 module.exports = router;
