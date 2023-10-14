@@ -11,6 +11,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 module.exports = {
   add: async (req, res) => {
     try {
+      console.log("=====entered picture_controller add=====");
       let propertyId = null;
       let brokerId = null;
       let isCertificate = 0;
