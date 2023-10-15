@@ -40,7 +40,7 @@ function OffcanvasNavbar() {
             <Offcanvas.Body>
               <Nav className="justify-content-start flex-grow-1 pe-3">
                 <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="#action2">FindBroker</Nav.Link>
+                <Nav.Link href="/brokerList">FindBroker</Nav.Link>
                 <Nav.Link href="#action2">Search</Nav.Link>
                 <Nav.Link href="/postProperty">PostProperty</Nav.Link>
 
@@ -61,10 +61,14 @@ function OffcanvasNavbar() {
                   <span mt={4} className="d-flex justify-content-end mt-2">
                     <h6>Hello, {authState.email} </h6>{" "}
                     {authState.status && (
+                      <>
                       <Button size="sm" onClick={logout}>
                         {" "}
                         Logout
                       </Button>
+                      
+                     
+                      </>
                     )}
                   </span>
                 ) : (

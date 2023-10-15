@@ -7,15 +7,18 @@ import Col from 'react-bootstrap/Col';
 import { Form, Formik, Field } from "formik";
 import * as Yup from 'yup';
 import "./BuyerProfile.css";
-
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../helpers/AuthContext";
 import { Button } from 'react-bootstrap';
 
 function BuyerProfile() {
+  let navigate=useNavigate();
   const [user, setUser] = useState({});
   //const { id } = useParams();
   const { authState } = useContext(AuthContext);
   const id = authState.id;
+  console.log ("id is " + id);
+  const [favorites, setFavourites]=useState([]);
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const validationSchema = Yup.object().shape({
     name: Yup.string().nullable(),
@@ -26,17 +29,28 @@ function BuyerProfile() {
     axios.post()
   }
   useEffect(() => {
-    axios.get(`http://localhost:3005/api/users/${id}`,
+    if(!localStorage.getItem("accessToken")){
+      navigate("/login")
+    }else{
+      axios.get(`http://localhost:3005/api/users/${id}`,
       { headers: { accessToken: localStorage.getItem("accessToken") } }
     ).then((res) => {
       setUser(res.data);
       
     })
+    
       .catch((error) => {
         alert("there is an error");
-      })
+      });
     
-  }, [])
+    }
+     axios.get("http://localhost:3005/api/favorites",
+     { headers: { accessToken: localStorage.getItem("accessToken") } }
+     ).then((res)=>{
+      setFavourites(res.data);
+     }) 
+    
+  }, []);
 
   return (
 
@@ -70,7 +84,6 @@ function BuyerProfile() {
         </Form>
       </Formik>
      
-
     </Container>
 
   )

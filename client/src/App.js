@@ -51,6 +51,8 @@ function App() {
           approval: response.data.broker_approval,
           status: true,
         });
+
+        console.log("auth state: " + response.data.id);
       }
     });
   },[]);
@@ -69,11 +71,7 @@ function App() {
             <Route path="/login" exact element={<Login />} />
             <Route path="/brokerList" exact element={<BrokerList />} />
             <Route path="/postProperty" exact element={<PostProperty />} />
-            <Route
-              path="/updateProperty/:id"
-              exact
-              element={<UpdateProperty />}
-            />
+            <Route path="/updateProperty/:id" exact element={<UpdateProperty />} />
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
             <Route path="*" exact element={<PageNotFound />} />

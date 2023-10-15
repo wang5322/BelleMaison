@@ -64,14 +64,12 @@ module.exports = {
       return;
     }
   },
-  getAuth: [
-    validateToken,
-    (req, res) => {
+  getAuth: async (req, res) => {
       res.json(req.user);
     },
-  ],
+
   getById: async (req, res) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const user = await Users.findOne({
       where: { id: id },
       include: [Pictures],

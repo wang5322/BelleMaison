@@ -7,7 +7,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import "./Users.css";
 
 function Login() {
-  const { setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
 
   const initialValues = {
     email: "",
@@ -35,6 +35,7 @@ function Login() {
             approval: response.data.broker_approval,
             status: true,
           });
+          console.log("login page id saved as " + authState.id);
           navigate("/");
         }
       });
