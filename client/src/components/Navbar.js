@@ -21,6 +21,7 @@ function OffcanvasNavbar() {
       status: false,
     });
   };
+
   return (
     <>
       <Navbar key="md" expand="md" className="bg-body-tertiary mb-3">
@@ -76,6 +77,12 @@ function OffcanvasNavbar() {
                     <Nav.Link href="/login">Login</Nav.Link>
                     <Nav.Link href="/register">Register</Nav.Link>
                   </>
+                )}
+                {authState.role ==="broker" && (
+                  <Nav.Link href="/myProfile/broker">my profile</Nav.Link>
+                )}
+                {authState.role ==="buyer" && (
+                   <Nav.Link href="/myProfile/user">my profile</Nav.Link>
                 )}
               </Nav>
             </Offcanvas.Body>
