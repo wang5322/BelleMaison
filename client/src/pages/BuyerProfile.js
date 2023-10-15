@@ -27,7 +27,7 @@ function BuyerProfile() {
   });
 
   const onSubmit = (data) => {
-    axios.patch(`http://localhost:3005/api/users/byId/${id}`, data,
+    axios.patch(`http://localhost:3005/api/users/byId`, data,
     { 
       headers: { accessToken: localStorage.getItem("accessToken")}}
     ).then((res) =>{
@@ -39,7 +39,7 @@ function BuyerProfile() {
     if(!localStorage.getItem("accessToken")){
       navigate("/login")
     }else{
-      axios.get(`http://localhost:3005/api/users/${id}`,
+      axios.get(`http://localhost:3005/api/users/byId`,
       { headers: { accessToken: localStorage.getItem("accessToken") } }
     ).then((res) => {
       setUser(res.data);

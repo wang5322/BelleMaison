@@ -120,7 +120,7 @@ module.exports = {
   },
 
   update: async (req, res) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const updateUser = await Users.update(req.body, { where: { id: id } });
     res.json(updateUser);
   },
