@@ -1,13 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Card, FloatingLabel, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Axios from "axios";
 import "../css/main.css";
+import MDBCard from "../components/MDBCard";
+import * as Yup from "yup";
 // import { AuthContext } from "../helpers/AuthContext";
 
 function BrokerProfile() {
-  const id = 15;
+  //   const id = 15;
   const [brokerId, setBrokerId] = useState("");
   const [broker, setBroker] = useState({});
   const [files, setFiles] = useState([]);
@@ -15,6 +17,8 @@ function BrokerProfile() {
   const [certificates, setCertificates] = useState([]);
   const [properties, setProperties] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   //   const { authState } = useContext(AuthContext);
   //   const id = authState.id;
   //   console.log("id====", id);
@@ -69,6 +73,48 @@ function BrokerProfile() {
       console.log("No files selected");
     }
   };
+
+  const displayProperties = properties.map((property, key) => {
+    if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
+      // Access the first picture's imageUrl
+      const imageUrl = property.Pictures[0].imageUrl;
+      return (
+        <>
+          <MDBCard
+            key={key}
+            id={property.id}
+            img={imageUrl}
+            address={property.address}
+            city={property.city}
+            type={property.type}
+            bedrooms={property.bedrooms}
+            bathrooms={property.bathrooms}
+            year_built={property.year_built}
+            price={property.price}
+            features={property.features}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <MDBCard
+            key={key}
+            id={property.id}
+            img={"notFound"}
+            address={property.address}
+            city={property.city}
+            type={property.type}
+            bedrooms={property.bedrooms}
+            bathrooms={property.bathrooms}
+            year_built={property.year_built}
+            price={property.price}
+            features={property.features}
+          />
+        </>
+      );
+    }
+  });
 
   //Error Modal section
   const [show, setShow] = useState({ error: "", status: false });
@@ -145,7 +191,6 @@ function BrokerProfile() {
       });
   }, []);
 
-  //   TODO: Implement update form
   const formik = useFormik({
     enableReinitialize: true, // Allow the form to reinitialize when initial values change
     initialValues: {
@@ -154,7 +199,38 @@ function BrokerProfile() {
       address: broker ? broker.address : "",
       email: broker ? broker.email : "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .max(100, "Maximum length for address is 100 characters")
+        .required("Please enter name"),
+      address: Yup.string()
+        .max(360, "Maximum length for address is 360 characters")
+        .nullable(),
+      phone: Yup.string()
+        .matches(phoneRegExp, "Please enter a valid phone number")
+        .min(10, "must be 10 digits")
+        .max(10, "must be 10 digits")
+        .nullable(),
+      email: Yup.string().email("Please enter a valid email").required(),
+    }),
+    onSubmit: (values) => {
+      try {
+        Axios.patch(`http://localhost:3005/api/users/byId/`, values, {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }).then(() => {
+          alert("profile info updated");
+        });
+      } catch (error) {
+        if (error.response && error.response.data.message) {
+          // TODO: Replace with modal
+          alert(error.response.data.message);
+        } else {
+          alert("There is an error occurred while uploading property");
+        }
+      }
+    },
   });
+
   return (
     <div>
       <Container>
@@ -205,10 +281,12 @@ function BrokerProfile() {
                       name="address"
                       type="text"
                       className="mb-2"
+                      value={formik.values.address}
+                      onChange={formik.handleChange}
                     ></Form.Control>
                   </FloatingLabel>
                 </Form.Group>
-                {/* address */}
+                {/* email */}
                 <Form.Group>
                   <Form.Label>Email:</Form.Label>
                   <FloatingLabel controlId="form.name" label="Email">
@@ -217,9 +295,14 @@ function BrokerProfile() {
                       name="email"
                       type="text"
                       className="mb-2"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
                     ></Form.Control>
                   </FloatingLabel>
                 </Form.Group>
+                <Button type="submit" variant="dark">
+                  Save profile changes
+                </Button>
               </Col>
               <Col
                 md={5}
@@ -273,11 +356,15 @@ function BrokerProfile() {
         </Card>
         <Row className="propertyList">
           <div className="mt-2">
+            <h1>Properties posted</h1>
+          </div>
+          <div className="card-container">{displayProperties}</div>
+          <div>
             <Button>Add porperty</Button>
           </div>
-
-          {""}
+          <hr></hr>
         </Row>
+
         <Row className="certificate"></Row>
 
         {/* Modal rendering */}

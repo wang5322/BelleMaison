@@ -73,8 +73,8 @@ function UpdateProperty() {
       files.forEach((file) => {
         formData.append("images", file);
       });
-      console.log("button clicked");
-      console.log("Property values are:", values);
+      // console.log("button clicked");
+      // console.log("Property values are:", values);
       // TODO: use update
       try {
         await Axios.put(
