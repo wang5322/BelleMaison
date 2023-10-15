@@ -5,7 +5,7 @@ const { Users, Pictures } = require("../models");
 const pictureController = require("./picture_controller");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const validator = require('validator');
+const validator = require("validator");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
 module.exports = {
@@ -48,7 +48,12 @@ module.exports = {
         const JWT_SECRET = process.env.JWT_SECRET;
 
         const accessToken = sign(
-          { email: user.email, id: user.id, role: user.role ,approval: user.broker_approval},
+          {
+            email: user.email,
+            id: user.id,
+            role: user.role,
+            approval: user.broker_approval,
+          },
           JWT_SECRET
         );
         res.json({
@@ -65,8 +70,8 @@ module.exports = {
     }
   },
   getAuth: async (req, res) => {
-      res.json(req.user);
-    },
+    res.json(req.user);
+  },
 
   getById: async (req, res) => {
     const id = req.user.id;
@@ -114,12 +119,11 @@ module.exports = {
     }
   },
 
-  update: async(req,res)=>{
+  update: async (req, res) => {
     const id = req.params.id;
-    const updateUser=await Users.update(req.body,{where:{id:id}});  
-    res.json(updateUser);   
-  }
-
+    const updateUser = await Users.update(req.body, { where: { id: id } });
+    res.json(updateUser);
+  },
 };
 
 //module.exports = router;

@@ -8,52 +8,17 @@ import "../css/main.css";
 
 function BrokerProfile() {
   const id = 15;
+  const [brokerId, setBrokerId] = useState("");
   const [broker, setBroker] = useState({});
   const [files, setFiles] = useState([]);
   const [profile, setProfile] = useState({});
   const [certificates, setCertificates] = useState([]);
+  const [properties, setProperties] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   //   const { authState } = useContext(AuthContext);
   //   const id = authState.id;
   //   console.log("id====", id);
   //   console.log("authId====", authState.id);
-
-  const uploadFiles = () => {
-    // const selectedFiles = Array.from(event.target.files);
-    // setFiles(selectedFiles);
-    if (files && files.length > 0) {
-      const formData = new FormData();
-
-      files.forEach((file) => {
-        formData.append("images", file);
-      });
-      console.log("====button clicked====");
-
-      console.log("Broker Id is", id);
-      const brokerId = id;
-      formData.append("brokerId", brokerId);
-
-      Axios.post("http://localhost:3005/api/pictures", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then((response) => {
-          console.log("pictureId", response.data.id);
-        })
-        .catch((error) => {
-          if (error.response.data.message) {
-            handleShow(error.response.data.message);
-          } else {
-            handleShow(
-              "There is an error occured while deleting profile picture"
-            );
-          }
-        });
-      setFiles([]);
-      window.location.reload();
-    } else {
-      console.log("No files selected");
-    }
-  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -68,6 +33,40 @@ function BrokerProfile() {
         setSelectedImage(reader.result);
         console.log("reader.result====", reader.result);
       };
+    }
+  };
+
+  const uploadFiles = () => {
+    if (files && files.length > 0) {
+      const formData = new FormData();
+
+      files.forEach((file) => {
+        formData.append("images", file);
+      });
+      console.log("====button clicked====");
+
+      console.log("Broker Id is", brokerId);
+      formData.append("brokerId", brokerId);
+
+      Axios.post("http://localhost:3005/api/pictures", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((response) => {
+          console.log("pictureId", response.data.id);
+        })
+        .catch((error) => {
+          if (error.response.data.message) {
+            handleShow(error.response.data.message);
+          } else {
+            handleShow(
+              "There is an error occured while adding profile picture"
+            );
+          }
+        });
+      setFiles([]);
+      window.location.reload();
+    } else {
+      console.log("No files selected");
     }
   };
 
@@ -100,12 +99,19 @@ function BrokerProfile() {
         }
       });
   };
-  //Get broker info
+  //Get broker info & properties info
   useEffect(() => {
-    Axios.get(`http://localhost:3005/api/users/${id}`)
+    console.log("======entered useEffect=========");
+    Axios.get(`http://localhost:3005/api/users/byId`, {
+      headers: {
+        accessToken: localStorage.getItem("accessToken"),
+      },
+    })
       .then((response) => {
+        console.log("====entered response======");
+        console.log("user Info======", response.data);
         setBroker(response.data);
-
+        setBrokerId(response.data.id);
         for (let i = 0; i < response.data.Pictures.length; i++) {
           if (response.data.Pictures[i].isCertificate !== 1) {
             setProfile(response.data.Pictures[i]);
@@ -119,15 +125,25 @@ function BrokerProfile() {
         console.log("profileInfo====", profile);
       })
       .catch((error) => {
-        if (error.response.data.message) {
-          handleShow(error.response.data.message);
-        } else {
-          handleShow("There is an error occured while getting broker info");
-        }
+        // if (error.response.data.message) {
+        //   handleShow(error.response.data.message);
+        // } else {
+        //   handleShow("There is an error occured while getting broker info");
+        // }
       });
 
-    Axios.get(`http://localhost:3005/api/properties/byBroker`);
-  }, [id]);
+    Axios.get(`http://localhost:3005/api/properties/byBroker`, {
+      headers: {
+        accessToken: localStorage.getItem("accessToken"),
+      },
+    })
+      .then((response) => {
+        setProperties(response.data);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }, []);
 
   //   TODO: Implement update form
   const formik = useFormik({
@@ -256,7 +272,10 @@ function BrokerProfile() {
           </Form>
         </Card>
         <Row className="propertyList">
-          <Button>Add porperty</Button>
+          <div className="mt-2">
+            <Button>Add porperty</Button>
+          </div>
+
           {""}
         </Row>
         <Row className="certificate"></Row>
