@@ -3,12 +3,9 @@ import SearchBar from "../components/SearchBar";
 import './Home.css';
 import axios from "axios";
 import Card from "../components/MDBCard";
-import {useNavigate} from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 
 function Home() {
-
-    let navigate = useNavigate();
 
     const initValue = {
         Pictures:{ imageUrl:""}
@@ -16,10 +13,62 @@ function Home() {
 
     const [listOfProperties, setListOfProperties] = useState([initValue]);
     const [pageNumber, setPageNumber] = useState(0);
+    const [city, setCity] = useState();
     const articlesPerPage = 5;
     const propertiesVisited = pageNumber * articlesPerPage;
 
-    const displayProperties = listOfProperties
+    
+
+    const pageCount = Math.ceil(listOfProperties.length / articlesPerPage);
+
+    const changePage = ({ selected }) => {
+        setPageNumber(selected);
+    };
+
+    useEffect(()=>{
+        axios.get("http://localhost:3005/api/properties")
+        .then((response)=>{
+            setListOfProperties(response.data);
+            // const uniqueCities = new Set();
+            // // Loop through the data and add city names to the Set
+            // response.data.forEach((property) => {
+            //     uniqueCities.add(property.city);
+            // });
+
+            // // Convert the Set back to an array (if needed)
+            // setUniqueCitiesArray(Array.from(uniqueCities));
+        })
+        .catch((err)=>{
+            if(err.response.data.status!==404){
+                alert("no records found!");
+                return
+            }
+        })
+    },[]);
+
+    const handleCityChange = (city) => {
+        //setListOfProperties(newData);
+        setCity(city);
+        console.log('city = ', city);
+    };
+
+    const resetCityChange = ()=>{
+        setCity("");
+    }
+
+    function filterData(listOfProperties, city){
+        let filteredProperties = listOfProperties;
+        if (city) {
+            filteredProperties = filteredProperties.filter(
+                ( property ) => {return property.city.toLowerCase() == city.toLowerCase()} );
+        }
+        return filteredProperties;
+    }
+
+    const result = filterData(listOfProperties, city, "");
+
+
+    const displayProperties = result
         .slice(propertiesVisited, propertiesVisited + articlesPerPage)
         .map((property, key)=>{
         if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
@@ -43,24 +92,6 @@ function Home() {
        }
     )
 
-    const pageCount = Math.ceil(listOfProperties.length / articlesPerPage);
-
-    const changePage = ({ selected }) => {
-        setPageNumber(selected);
-    };
-
-    useEffect(()=>{
-        axios.get("http://localhost:3005/api/properties")
-        .then((response)=>{
-            setListOfProperties(response.data);
-        })
-        .catch((err)=>{
-            if(err.response.data.status!==404){
-                alert("no records found!");
-                return
-            }
-        })
-    },[]);
 
     return (
         <>
@@ -75,14 +106,18 @@ function Home() {
                         <div className='d-flex justify-content-center align-items-center h-100'>
                             <div className='text-white mb-5'>
                                 <h1 className='mt-5'>{listOfProperties.length} properties in Quebec</h1>
-                                <SearchBar placeholder = 'Please input city...' data={listOfProperties}/>
+                                <SearchBar 
+                                    placeholder = 'Please input city...' 
+                                    properties={listOfProperties} 
+                                    handleCityChange={handleCityChange}
+                                    resetCityChange={resetCityChange}/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className='p-5 '>
-                <h2>Newest list: </h2>
+                <h2>Newest listing: </h2>
                     <div className="card-container">
 
                     {displayProperties}
