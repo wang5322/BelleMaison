@@ -51,8 +51,6 @@ function App() {
           approval: response.data.broker_approval,
           status: true,
         });
-
-        console.log("auth state: " + response.data.id);
       }
     });
   },[]);

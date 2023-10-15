@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Favorites, Properties, Pictures } = require('../models');
+const pictureController = require("./picture_controller");
 
 
 module.exports = {
@@ -48,6 +49,16 @@ module.exports = {
                     }
                 },
             });
+
+            for (let i = 0; i< favorites.length; i++) {
+                for (let j = 0; j < favorites[i].Property.Pictures.length; j++) {
+                    favorites[i].Property.Pictures[j].imageUrl =
+                        await pictureController.getPicUrlFromS3(
+                            req,
+                            favorites[i].Property.Pictures[j].imageName
+                        );
+                }
+            }
             res.json(favorites);
         } catch (err) {
             return res.status(500).json({error: err});

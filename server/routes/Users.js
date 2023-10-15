@@ -14,6 +14,6 @@ router.post("/login", userController.getUserByEmail);
 
 router.get("/:id", validateToken, s3Middleware, userController.getById);
 
-router.patch("/byId/:id", userController.update);
+router.patch("/byId/:id", validateToken, userController.update);
 
 module.exports = router;

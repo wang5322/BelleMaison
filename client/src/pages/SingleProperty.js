@@ -64,14 +64,12 @@ const SingleProperty = () => {
       } else {
         setLiked(false);
       }
-      console.log(property);
       const tempAddress = `${res.data.address},${res.data.city}`;
       return fromAddress(tempAddress);
     }).then((res) => {
       setCenter(res.results[0].geometry.location);
       return fromAddress("4330 Sherbrooke St W, Westmount, Quebec H3Z 1E2");
     }).then((res) => {
-      console.log(res);
       setDestination(res.results[0].geometry.location);
     }).catch((err) => {
       console.log(err);
