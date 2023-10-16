@@ -36,12 +36,11 @@ function Login() {
             status: true,
           });
           console.log("login page id saved as " + authState.id);
-          if(!authState.role === "admin"){
+          if (authState.role !== "admin") {
             navigate("/");
-          }else{
+          } else {
             navigate("/admin/users");
           }
-          
         }
       });
   };
