@@ -22,7 +22,7 @@ function AdminUser() {
     }, [brokerApproval]);
     
     const approve = (userid) => {
-        axios.patch(`http://localhost:3005/api/users/byId`, 
+        axios.patch(`http://localhost:3005/api/users/admin/update/${id}`, 
         { id: userid, broker_approval: 1},
         { headers: { accessToken: localStorage.getItem("accessToken") } }
         ).then((res) =>{
