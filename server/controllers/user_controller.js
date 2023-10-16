@@ -151,6 +151,20 @@ module.exports = {
       return;
     }
   },
+  
+  approve: async(req,res)=>{
+    try{
+      const id = req.params.id;
+      const approveUser = await Users.update(req.body,{where:{id:id}});
+      res.json(approveUser);
+    }
+    catch(err){
+      res.json(err);
+      return;
+    }   
+  }
 };
+
+
 
 //module.exports = router;

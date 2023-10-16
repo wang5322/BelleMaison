@@ -19,4 +19,6 @@ router.get("/byId", validateToken, s3Middleware, userController.getById);
 
 router.patch("/byId", validateToken, userController.update);
 
+//admin approve broker and soft delete user
+router.patch("admin/update/:id", validateToken, userController.approve);
 module.exports = router;
