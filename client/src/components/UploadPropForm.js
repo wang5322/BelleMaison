@@ -23,7 +23,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [property]);
+  }, []);
 
   return (
     <React.Fragment>
@@ -38,9 +38,9 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           <Form.Group className="mb-3" controlId="form.propertyPrice">
             <Form.Label>Property Price:</Form.Label>
             <FloatingLabel
-              controlId="form.priceInput"
               label="Property Price"
               className="mb-3"
+              controlId="form.propertyPrice"
             >
               <Form.Control
                 type="text"
@@ -57,11 +57,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           />
           <Form.Group className="mb-3" controlId="form.address">
             <Form.Label>Property address:</Form.Label>
-            <FloatingLabel
-              controlId="form.addressInput"
-              label="Property Address"
-              className="mb-3"
-            >
+            <FloatingLabel label="Property Address" className="mb-3">
               <Form.Control
                 type="text"
                 name="address"
@@ -77,11 +73,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           />
           <Form.Group className="mb-3" controlId="form.city">
             <Form.Label>Property City:</Form.Label>
-            <FloatingLabel
-              controlId="form.cityInput"
-              label="Property City"
-              className="mb-3"
-            >
+            <FloatingLabel label="Property City" className="mb-3">
               <Form.Control
                 type="text"
                 name="city"
@@ -104,11 +96,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
             <Col md="6">
               <Form.Group className="mb-3" controlId="form.yearBuilt">
                 <Form.Label>Year Built:</Form.Label>
-                <FloatingLabel
-                  controlId="form.yearBuiltInput"
-                  label="Year Built"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Year Built" className="mb-3">
                   <Form.Control
                     type="text"
                     name="year_built"
@@ -122,11 +110,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
             <Col md="6">
               <Form.Group className="mb-3" controlId="form.postal">
                 <Form.Label>Postal:</Form.Label>
-                <FloatingLabel
-                  controlId="form.postalInput"
-                  label="Postal(format:H2D 343)"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Postal(format:H2D 343)" className="mb-3">
                   <Form.Control
                     type="text"
                     name="postal"
@@ -157,11 +141,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
               {" "}
               <Form.Group className="mb-3" controlId="form.bedrooms">
                 <Form.Label>Bedroom Num:</Form.Label>
-                <FloatingLabel
-                  controlId="form.bedroomsInput"
-                  label="Bedroom Num"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Bedroom Num" className="mb-3">
                   <Form.Control
                     type="text"
                     name="bedrooms"
@@ -176,11 +156,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
               {" "}
               <Form.Group className="mb-3" controlId="form.bathrooms">
                 <Form.Label>Bathroom Num:</Form.Label>
-                <FloatingLabel
-                  controlId="form.bathroomsInput"
-                  label="Bathroom Num"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Bathroom Num" className="mb-3">
                   <Form.Control
                     type="text"
                     name="bathrooms"
@@ -195,11 +171,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
               {" "}
               <Form.Group className="mb-3" controlId="form.rooms">
                 <Form.Label>Room Num:</Form.Label>
-                <FloatingLabel
-                  controlId="form.roomsInput"
-                  label="Room Num"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Room Num" className="mb-3">
                   <Form.Control
                     type="text"
                     name="rooms"
@@ -217,11 +189,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           />
           <Form.Group className="mb-3" controlId="form.buildingStyle">
             <Form.Label>Building Style</Form.Label>
-            <FloatingLabel
-              controlId="form.buildingStyleInput"
-              label="Building Style"
-              className="mb-3"
-            >
+            <FloatingLabel label="Building Style" className="mb-3">
               <Form.Select
                 aria-label="building style select"
                 name="type"
@@ -253,11 +221,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
             <Col md="6">
               <Form.Group className="mb-3" controlId="form.lotArea">
                 <Form.Label>Lot Area:</Form.Label>
-                <FloatingLabel
-                  controlId="form.lotAreaInput"
-                  label="Lot Area"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Lot Area" className="mb-3">
                   <Form.Control
                     type="text"
                     name="lotArea"
@@ -271,11 +235,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
             <Col md="6">
               <Form.Group className="mb-3" controlId="form.parkingNumber">
                 <Form.Label>Parking:</Form.Label>
-                <FloatingLabel
-                  controlId="form.parkingNumberInput"
-                  label="Parking Number"
-                  className="mb-3"
-                >
+                <FloatingLabel label="Parking Number" className="mb-3">
                   <Form.Select
                     aria-label="Select parking number"
                     name="parking"
@@ -293,13 +253,6 @@ function UploadPropForm({ formik, onFileSelected, property }) {
                 </FloatingLabel>
               </Form.Group>
             </Col>
-
-            {/* Submit Button              */}
-            {/* <div className="px-2 justify-content-end">
-              <Button variant="info" className="col-md-3" type="Submit">
-                Create
-              </Button>
-            </div> */}
           </Row>
         </Col>
 
@@ -313,7 +266,6 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           <Form.Group className="mb-3" controlId="form.additionalFeatures">
             <Form.Label>Additional Features:</Form.Label>
             <FloatingLabel
-              controlId="form.AdditionalFeaturesInput"
               label="Add addtional features in here"
               className="mb-3"
             >
@@ -337,7 +289,6 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           <Form.Group className="mb-3" controlId="form.description">
             <Form.Label>Description:</Form.Label>
             <FloatingLabel
-              controlId="form.descriptionInput"
               label="Add description for this property"
               className="mb-3"
             >

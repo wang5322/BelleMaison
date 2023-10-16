@@ -32,11 +32,9 @@ function BrokerProfile() {
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onloadend = () => {
         // Set the selected image to the data URL
         setSelectedImage(reader.result);
-        console.log("reader.result====", reader.result);
       };
     }
   };
@@ -77,45 +75,41 @@ function BrokerProfile() {
     }
   };
 
-  const displayProperties = properties.map((property, key) => {
+  const displayProperties = properties.map((property) => {
     if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
       // Access the first picture's imageUrl
       const imageUrl = property.Pictures[0].imageUrl;
       return (
-        <>
-          <MDBCard
-            key={key}
-            id={property.id}
-            img={imageUrl}
-            address={property.address}
-            city={property.city}
-            type={property.type}
-            bedrooms={property.bedrooms}
-            bathrooms={property.bathrooms}
-            year_built={property.year_built}
-            price={property.price}
-            page="broker"
-            features={property.features}
-          />
-        </>
+        <MDBCard
+          key={property.id}
+          id={property.id}
+          img={imageUrl}
+          address={property.address}
+          city={property.city}
+          type={property.type}
+          bedrooms={property.bedrooms}
+          bathrooms={property.bathrooms}
+          year_built={property.year_built}
+          price={property.price}
+          page="broker"
+          features={property.features}
+        />
       );
     } else {
       return (
-        <>
-          <MDBCard
-            key={key}
-            id={property.id}
-            img={"notFound"}
-            address={property.address}
-            city={property.city}
-            type={property.type}
-            bedrooms={property.bedrooms}
-            bathrooms={property.bathrooms}
-            year_built={property.year_built}
-            price={property.price}
-            features={property.features}
-          />
-        </>
+        <MDBCard
+          key={property.id}
+          id={property.id}
+          img={"notFound"}
+          address={property.address}
+          city={property.city}
+          type={property.type}
+          bedrooms={property.bedrooms}
+          bathrooms={property.bathrooms}
+          year_built={property.year_built}
+          price={property.price}
+          features={property.features}
+        />
       );
     }
   });
@@ -162,22 +156,28 @@ function BrokerProfile() {
         console.log("user Info======", response.data);
         setBroker(response.data);
         setBrokerId(response.data.id);
+
+        const certificatePictures = [];
+
         //Seperate profile picture and certificate pictures
-        for (let i = 0; i < response.data.Pictures.length; i++) {
-          if (!response.data.Pictures[i].isCertificate) {
-            setProfile(response.data.Pictures[i]);
-          } else {
-            setCertificates((prevCertificates) => [
-              ...prevCertificates,
-              response.data.Pictures[i],
-            ]);
-            // console.log("certificates=====", response.data.Pictures[i]);
+        if (response.data.Pictures.length > 0) {
+          for (let i = 0; i < response.data.Pictures.length; i++) {
+            if (!response.data.Pictures[i].isCertificate) {
+              setProfile(response.data.Pictures[i]);
+            } else {
+              //use array instead of setState in a loop, due to the asynchronous nature of state updates
+              certificatePictures.push(response.data.Pictures[i]);
+            }
           }
+          // Update certificates state after the loop
+          setCertificates(certificatePictures);
         }
-        console.log(response.data);
+
+        console.log(certificates);
         // console.log("profileInfo====", profile);
       })
       .catch((error) => {
+        alert(error);
         // if (error.response.data.message) {
         //   handleShow(error.response.data.message);
         // } else {
@@ -366,25 +366,34 @@ function BrokerProfile() {
         {/* Certificate Section */}
         <Row className="certificate">
           <h2>Certificate</h2>
-          <div style={{ width: "300px" }}>
-            <Form className="mb-3">
-              <Form.Group>
-                <Form.Label>Upload certificates</Form.Label>
-                <Form.Control
-                  type="file"
-                  multiple
-                  onChange={handleImageChange}
-                ></Form.Control>
-              </Form.Group>
-              <Button type="submit" onClick={() => uploadFiles(1)}>
-                Submit certificates
-              </Button>
-              <CertiGallery
-                pictures={certificates}
-                setPictures={setCertificates}
-              ></CertiGallery>
-            </Form>
-          </div>
+
+          <Form className="mb-3">
+            <Form.Group>
+              <Form.Label>Upload certificates</Form.Label>
+              <div className="d-flex">
+                {" "}
+                <div style={{ width: "600px" }}>
+                  <Form.Control
+                    type="file"
+                    multiple
+                    onChange={handleImageChange}
+                  ></Form.Control>
+                </div>
+                <Button
+                  className="mx-2"
+                  type="submit"
+                  onClick={() => uploadFiles(1)}
+                >
+                  Submit certificates
+                </Button>
+              </div>
+            </Form.Group>
+
+            <CertiGallery
+              pictures={certificates}
+              setPictures={setCertificates}
+            ></CertiGallery>
+          </Form>
         </Row>
 
         <hr></hr>
@@ -472,7 +481,3 @@ function BrokerProfile() {
 }
 
 export default BrokerProfile;
-
-<Form.Group>
-  <Form.Control type="file"></Form.Control>
-</Form.Group>;

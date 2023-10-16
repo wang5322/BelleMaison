@@ -46,7 +46,7 @@ const Card = ({
   };
   return (
     <>
-      <MDBCard className="propCard">
+      <MDBCard className="propCard" key={id}>
         <MDBRipple
           rippleColor="light"
           rippleTag="div"

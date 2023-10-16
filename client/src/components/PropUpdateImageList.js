@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { Row, Container } from "react-bootstrap";
@@ -8,7 +8,7 @@ import Axios from "axios";
 function PropUpdateImageList({ pictures, setPictures }) {
   //   const navigate = useNavigate();
   //   const [updatedPictures, setUpdatedPictures] = useState([]);
-  console.log("certificates===", pictures);
+  // console.log("certificates===", pictures);
   const deleteImage = (id) => {
     console.log("image deleted");
     Axios.delete(`http://localhost:3005/api/pictures/${id}`)
@@ -35,7 +35,7 @@ function PropUpdateImageList({ pictures, setPictures }) {
         <hr />
         <Row className="my-3 px-4">
           {" "}
-          <h3> Pictures of the property</h3>
+          <h3> Gallery</h3>
         </Row>
 
         <Row className="justify-content-center">

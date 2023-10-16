@@ -106,6 +106,7 @@ function UpdateProperty() {
   });
 
   useEffect(() => {
+    console.log("=====Entered useEffect for update property====");
     Axios.get(`http://localhost:3005/api/properties/byId/${id}`)
       .then((response) => {
         setProperty(response.data);
