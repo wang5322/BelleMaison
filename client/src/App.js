@@ -10,6 +10,8 @@ import PostProperty from "./pages/PostProperty";
 import BrokerList from "./pages/BrokerList";
 import BuyerProfile from "./pages/BuyerProfile";
 import BrokerProfile from "./pages/BrokerProfile";
+import AdminProperty from "./pages/AdminProperty";
+import AdminUser from "./pages/AdminUser";
 import Navbar2 from "./components/Navbar";
 import PageNotFound from './pages/PageNotFound';
 import { AuthContext } from "./helpers/AuthContext";
@@ -74,6 +76,8 @@ function App() {
             <Route path="/myProfile/user" exact element={<BuyerProfile />} />
             <Route path="/myProfile/broker" exact element={<BrokerProfile />} />
             <Route path="*" exact element={<PageNotFound />} />
+            <Route path="/admin/users" exact element={<AdminUser />} />
+            <Route path="/admin/properties" exact element={<AdminProperty />} />
           </Routes>
         </Router>
         <footer id="footer">

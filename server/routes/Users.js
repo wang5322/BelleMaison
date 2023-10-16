@@ -6,8 +6,10 @@ const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/", userController.add);
 
-router.get("/auth", validateToken, userController.getAuth);
+router.get("/", userController.getAll);
 
+router.get("/auth", validateToken, userController.getAuth);
+//get broker that has only been approved
 router.get("/byRole/broker", s3Middleware, userController.getUserByRole);
 
 router.post("/login", userController.getUserByEmail);

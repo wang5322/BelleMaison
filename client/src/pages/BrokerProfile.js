@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import Axios from "axios";
 import "../css/main.css";
 import MDBCard from "../components/MDBCard";
+import CertiGallery from "../components/PropUpdateImageList";
 import * as Yup from "yup";
 // import { AuthContext } from "../helpers/AuthContext";
 
@@ -31,16 +32,14 @@ function BrokerProfile() {
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onloadend = () => {
         // Set the selected image to the data URL
         setSelectedImage(reader.result);
-        console.log("reader.result====", reader.result);
       };
     }
   };
 
-  const uploadFiles = () => {
+  const uploadFiles = (isCertificate) => {
     if (files && files.length > 0) {
       const formData = new FormData();
 
@@ -51,7 +50,9 @@ function BrokerProfile() {
 
       console.log("Broker Id is", brokerId);
       formData.append("brokerId", brokerId);
-
+      if (isCertificate) {
+        formData.append("isCertificate", isCertificate);
+      }
       Axios.post("http://localhost:3005/api/pictures", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -74,44 +75,41 @@ function BrokerProfile() {
     }
   };
 
-  const displayProperties = properties.map((property, key) => {
+  const displayProperties = properties.map((property) => {
     if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
       // Access the first picture's imageUrl
       const imageUrl = property.Pictures[0].imageUrl;
       return (
-        <>
-          <MDBCard
-            key={key}
-            id={property.id}
-            img={imageUrl}
-            address={property.address}
-            city={property.city}
-            type={property.type}
-            bedrooms={property.bedrooms}
-            bathrooms={property.bathrooms}
-            year_built={property.year_built}
-            price={property.price}
-            features={property.features}
-          />
-        </>
+        <MDBCard
+          key={property.id}
+          id={property.id}
+          img={imageUrl}
+          address={property.address}
+          city={property.city}
+          type={property.type}
+          bedrooms={property.bedrooms}
+          bathrooms={property.bathrooms}
+          year_built={property.year_built}
+          price={property.price}
+          page="broker"
+          features={property.features}
+        />
       );
     } else {
       return (
-        <>
-          <MDBCard
-            key={key}
-            id={property.id}
-            img={"notFound"}
-            address={property.address}
-            city={property.city}
-            type={property.type}
-            bedrooms={property.bedrooms}
-            bathrooms={property.bathrooms}
-            year_built={property.year_built}
-            price={property.price}
-            features={property.features}
-          />
-        </>
+        <MDBCard
+          key={property.id}
+          id={property.id}
+          img={"notFound"}
+          address={property.address}
+          city={property.city}
+          type={property.type}
+          bedrooms={property.bedrooms}
+          bathrooms={property.bathrooms}
+          year_built={property.year_built}
+          price={property.price}
+          features={property.features}
+        />
       );
     }
   });
@@ -154,23 +152,32 @@ function BrokerProfile() {
       },
     })
       .then((response) => {
-        console.log("====entered response======");
+        // console.log("====entered response======");
         console.log("user Info======", response.data);
         setBroker(response.data);
         setBrokerId(response.data.id);
-        for (let i = 0; i < response.data.Pictures.length; i++) {
-          if (response.data.Pictures[i].isCertificate !== 1) {
-            setProfile(response.data.Pictures[i]);
-            console.log("imageUrl====", response.data.Pictures[i].imageUrl);
-            return;
-          } else {
-            setCertificates(response.data.Pictures[i]);
+
+        const certificatePictures = [];
+
+        //Seperate profile picture and certificate pictures
+        if (response.data.Pictures.length > 0) {
+          for (let i = 0; i < response.data.Pictures.length; i++) {
+            if (!response.data.Pictures[i].isCertificate) {
+              setProfile(response.data.Pictures[i]);
+            } else {
+              //use array instead of setState in a loop, due to the asynchronous nature of state updates
+              certificatePictures.push(response.data.Pictures[i]);
+            }
           }
+          // Update certificates state after the loop
+          setCertificates(certificatePictures);
         }
-        console.log(response.data);
-        console.log("profileInfo====", profile);
+
+        console.log(certificates);
+        // console.log("profileInfo====", profile);
       })
       .catch((error) => {
+        alert(error);
         // if (error.response.data.message) {
         //   handleShow(error.response.data.message);
         // } else {
@@ -234,6 +241,7 @@ function BrokerProfile() {
   return (
     <div>
       <Container>
+        {/* Profile info & profile picture section*/}
         <Row>
           <h1>Broker Profile</h1>
         </Row>
@@ -354,18 +362,53 @@ function BrokerProfile() {
             </Row>
           </Form>
         </Card>
-        <Row className="propertyList">
-          <div className="mt-2">
-            <h1>Properties posted</h1>
-          </div>
-          <div className="card-container">{displayProperties}</div>
-          <div>
-            <Button>Add porperty</Button>
-          </div>
-          <hr></hr>
+        <hr></hr>
+        {/* Certificate Section */}
+        <Row className="certificate">
+          <h2>Certificate</h2>
+
+          <Form className="mb-3">
+            <Form.Group>
+              <Form.Label>Upload certificates</Form.Label>
+              <div className="d-flex">
+                {" "}
+                <div style={{ width: "600px" }}>
+                  <Form.Control
+                    type="file"
+                    multiple
+                    onChange={handleImageChange}
+                  ></Form.Control>
+                </div>
+                <Button
+                  className="mx-2"
+                  type="submit"
+                  onClick={() => uploadFiles(1)}
+                >
+                  Submit certificates
+                </Button>
+              </div>
+            </Form.Group>
+
+            <CertiGallery
+              pictures={certificates}
+              setPictures={setCertificates}
+            ></CertiGallery>
+          </Form>
         </Row>
 
-        <Row className="certificate"></Row>
+        <hr></hr>
+        {/* PropertyList Section */}
+        <Row className="propertyList">
+          <div className="mt-2">
+            <h2>Properties posted</h2>
+            <div>
+              <Button variant="dark">Add porperty</Button>
+            </div>
+          </div>
+          <div className="card-container">{displayProperties}</div>
+
+          <hr></hr>
+        </Row>
 
         {/* Modal rendering */}
         <Modal show={show.status} onHide={handleClose}>
@@ -438,7 +481,3 @@ function BrokerProfile() {
 }
 
 export default BrokerProfile;
-
-<Form.Group>
-  <Form.Control type="file"></Form.Control>
-</Form.Group>;

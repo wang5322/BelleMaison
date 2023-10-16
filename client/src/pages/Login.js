@@ -36,7 +36,11 @@ function Login() {
             status: true,
           });
           console.log("login page id saved as " + authState.id);
-          navigate("/");
+          if (authState.role !== "admin") {
+            navigate("/");
+          } else {
+            navigate("/admin/users");
+          }
         }
       });
   };
