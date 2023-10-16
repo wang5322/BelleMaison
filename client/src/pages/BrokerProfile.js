@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import Axios from "axios";
 import "../css/main.css";
 import MDBCard from "../components/MDBCard";
+import CertiGallery from "../components/PropUpdateImageList";
 import * as Yup from "yup";
 // import { AuthContext } from "../helpers/AuthContext";
 
@@ -40,7 +41,7 @@ function BrokerProfile() {
     }
   };
 
-  const uploadFiles = () => {
+  const uploadFiles = (isCertificate) => {
     if (files && files.length > 0) {
       const formData = new FormData();
 
@@ -51,7 +52,9 @@ function BrokerProfile() {
 
       console.log("Broker Id is", brokerId);
       formData.append("brokerId", brokerId);
-
+      if (isCertificate) {
+        formData.append("isCertificate", isCertificate);
+      }
       Axios.post("http://localhost:3005/api/pictures", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -91,6 +94,7 @@ function BrokerProfile() {
             bathrooms={property.bathrooms}
             year_built={property.year_built}
             price={property.price}
+            page="broker"
             features={property.features}
           />
         </>
@@ -154,21 +158,24 @@ function BrokerProfile() {
       },
     })
       .then((response) => {
-        console.log("====entered response======");
+        // console.log("====entered response======");
         console.log("user Info======", response.data);
         setBroker(response.data);
         setBrokerId(response.data.id);
+        //Seperate profile picture and certificate pictures
         for (let i = 0; i < response.data.Pictures.length; i++) {
-          if (response.data.Pictures[i].isCertificate !== 1) {
+          if (!response.data.Pictures[i].isCertificate) {
             setProfile(response.data.Pictures[i]);
-            console.log("imageUrl====", response.data.Pictures[i].imageUrl);
-            return;
           } else {
-            setCertificates(response.data.Pictures[i]);
+            setCertificates((prevCertificates) => [
+              ...prevCertificates,
+              response.data.Pictures[i],
+            ]);
+            // console.log("certificates=====", response.data.Pictures[i]);
           }
         }
         console.log(response.data);
-        console.log("profileInfo====", profile);
+        // console.log("profileInfo====", profile);
       })
       .catch((error) => {
         // if (error.response.data.message) {
@@ -234,6 +241,7 @@ function BrokerProfile() {
   return (
     <div>
       <Container>
+        {/* Profile info & profile picture section*/}
         <Row>
           <h1>Broker Profile</h1>
         </Row>
@@ -354,18 +362,44 @@ function BrokerProfile() {
             </Row>
           </Form>
         </Card>
-        <Row className="propertyList">
-          <div className="mt-2">
-            <h1>Properties posted</h1>
+        <hr></hr>
+        {/* Certificate Section */}
+        <Row className="certificate">
+          <h2>Certificate</h2>
+          <div style={{ width: "300px" }}>
+            <Form className="mb-3">
+              <Form.Group>
+                <Form.Label>Upload certificates</Form.Label>
+                <Form.Control
+                  type="file"
+                  multiple
+                  onChange={handleImageChange}
+                ></Form.Control>
+              </Form.Group>
+              <Button type="submit" onClick={() => uploadFiles(1)}>
+                Submit certificates
+              </Button>
+              <CertiGallery
+                pictures={certificates}
+                setPictures={setCertificates}
+              ></CertiGallery>
+            </Form>
           </div>
-          <div className="card-container">{displayProperties}</div>
-          <div>
-            <Button>Add porperty</Button>
-          </div>
-          <hr></hr>
         </Row>
 
-        <Row className="certificate"></Row>
+        <hr></hr>
+        {/* PropertyList Section */}
+        <Row className="propertyList">
+          <div className="mt-2">
+            <h2>Properties posted</h2>
+            <div>
+              <Button variant="dark">Add porperty</Button>
+            </div>
+          </div>
+          <div className="card-container">{displayProperties}</div>
+
+          <hr></hr>
+        </Row>
 
         {/* Modal rendering */}
         <Modal show={show.status} onHide={handleClose}>

@@ -25,7 +25,7 @@ module.exports = {
         console.log("======req.broker_id=======", brokerId);
       }
       if (req.body.isCertificate) {
-        isCertificate = 1;
+        isCertificate = req.body.isCertificate;
       }
 
       // console.log("======req.file==============", req.files);
