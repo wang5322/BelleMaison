@@ -40,7 +40,7 @@ const SingleProperty = () => {
   const [property, setProperty] = useState({});
   const [distance, setDistance] = useState(0);
 
-  const {id} = useParams();
+  const { id } = useParams();
   useEffect(() => {
     axios.get(`http://localhost:3005/api/pictures/byProp/${id}`)
       .then((response) => {
@@ -59,6 +59,8 @@ const SingleProperty = () => {
 
     axios.get(`http://localhost:3005/api/properties/byId/${id}`).then((res) => {
       setProperty(res.data);
+      console.log(res.data);
+      console.log(authState.id);
       if (res.data.Favorites[0] && res.data.Favorites[0].user_id == authState.id) {
         setLiked(true);
       } else {
@@ -74,6 +76,8 @@ const SingleProperty = () => {
     }).catch((err) => {
       console.log(err);
     });
+
+    console.log("liked: " + liked);
   }, []);
 
   const likeAProperty = (property_id) => {
@@ -179,47 +183,47 @@ const SingleProperty = () => {
             <h2>result</h2>
           </Col>
         </Row>
-      {/* </Container>
+        {/* </Container>
       <Container className="mt-5 mb-5"> */}
-      <Row>
-        <Col md={6}>
-          <h2>View on Map</h2>
-          <p>distance to John Abott College: {distance}</p>
-          
-        </Col>
+        <Row>
+          <Col md={6}>
+            <h2>View on Map</h2>
+            <p>distance to John Abott College: {distance}</p>
 
-        <Col md={6}>
-          <div className="SingleProperty">
-            {!isLoaded ? (
-              <h1>Loading...</h1>
-            ) : (
-              <GoogleMap
-                mapContainerClassName="map-container"
-                center={center}
-                zoom={10}
-              >
-                <MarkerF
-                  position={center}
-                  icon="http://maps.google.com/mapfiles/kml/pal2/icon10.png" />
-                <MarkerF
-                  position={destination}
-                  icon="http://maps.google.com/mapfiles/kml/pal2/icon10.png" />
-                <DistanceMatrixService
-                  options={{
-                    origins: [center],
-                    destinations: [destination],
-                    travelMode: "DRIVING",
-                  }}
-                  callback={(response) => {
-                    const distance = response.rows[0].elements[0].distance;
-                    if (distance) setDistance(distance.text);
-                  }}
-                />
-              </GoogleMap>
-            )}
-          </div>
-        </Col>
-      </Row>
+          </Col>
+
+          <Col md={6}>
+            <div className="SingleProperty">
+              {!isLoaded ? (
+                <h1>Loading...</h1>
+              ) : (
+                <GoogleMap
+                  mapContainerClassName="map-container"
+                  center={center}
+                  zoom={10}
+                >
+                  <MarkerF
+                    position={center}
+                    icon="http://maps.google.com/mapfiles/kml/pal2/icon10.png" />
+                  <MarkerF
+                    position={destination}
+                    icon="http://maps.google.com/mapfiles/kml/pal2/icon10.png" />
+                  <DistanceMatrixService
+                    options={{
+                      origins: [center],
+                      destinations: [destination],
+                      travelMode: "DRIVING",
+                    }}
+                    callback={(response) => {
+                      const distance = response.rows[0].elements[0].distance;
+                      if (distance) setDistance(distance.text);
+                    }}
+                  />
+                </GoogleMap>
+              )}
+            </div>
+          </Col>
+        </Row>
       </Container>
     </div>
   );
