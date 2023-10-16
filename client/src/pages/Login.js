@@ -35,8 +35,8 @@ function Login() {
             approval: response.data.broker_approval,
             status: true,
           });
-          console.log("login page id saved as " + authState.id);
-          if (authState.role !== "admin") {
+          console.log("login page id saved as " + response.data.id);
+          if (response.data.role !== "admin") {
             navigate("/");
           } else {
             navigate("/admin/users");
