@@ -16,6 +16,7 @@ import { AuthContext } from "./helpers/AuthContext";
 import { useContext } from "react";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import AppFooter from './components/Footer';
 
 import UpdateProperty from "./pages/UpdateProperty";
 
@@ -75,6 +76,9 @@ function App() {
             <Route path="*" exact element={<PageNotFound />} />
           </Routes>
         </Router>
+        <footer id="footer">
+          <AppFooter />
+        </footer>
       </AuthContext.Provider>
     </div>
   );
