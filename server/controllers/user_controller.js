@@ -143,7 +143,7 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const id = req.body.id;
+      const id = req.user.id;
       const updateUser = await Users.update(req.body, { where: { id: id } });
       res.json(updateUser);
     } catch (err) {
