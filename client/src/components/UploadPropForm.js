@@ -3,6 +3,8 @@ import { Col, Row, Form, FloatingLabel } from "react-bootstrap";
 import ErrorMessageAlert from "./ErrorMessageAlert";
 // test commit
 function UploadPropForm({ formik, onFileSelected, property }) {
+  console.log("Property info:===", property);
+
   useEffect(() => {
     // Set property.price as the initial value when the component mounts
     formik.setValues({
@@ -21,9 +23,8 @@ function UploadPropForm({ formik, onFileSelected, property }) {
       features: property ? property.features : "",
       description: property ? property.description : "",
     });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [property]);
 
   return (
     <React.Fragment>

@@ -59,7 +59,7 @@ function App() {
   },[]);
 
   return (
-    <div className="App">
+    <div className="app-container">
       <AuthContext.Provider value={{ authState, setAuthState }}>
         {/* <Navbar /> */}
         <Navbar2 />

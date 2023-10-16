@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 export default function AppFooter(){
 
@@ -37,8 +39,8 @@ export default function AppFooter(){
                     <div>
                         <h4>Contact Us:</h4>
                         <Row>
-                            <Col>Email: <p><i class="fa-solid fa-envelope"></i> BelleMaison@gmail.com</p></Col>
-                            <Col>Phone:<p><i class="fa-solid fa-phone-volume"></i> +1 (514) 567-9876</p></Col>
+                            <Col>Email: <p><MailOutlineIcon/> BelleMaison@gmail.com</p></Col>
+                            <Col>Phone:<p><PhoneIcon/> +1 (514) 567-9876</p></Col>
                         </Row>
                     </div>
                 </Col>
