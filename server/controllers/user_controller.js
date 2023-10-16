@@ -34,6 +34,28 @@ module.exports = {
       //res.json("true");
     });
   },
+  getAll: async (req,res)=>{
+    const users = await Users.findAll({
+     
+      include: [Pictures],
+    }).catch((err) => {
+      return res.json(err);
+    });
+    if (!users) {
+      return res.json({ error: "There is no " + { role } });
+    } else {
+      for (let i = 0; i < users.length; i++) {
+        for (let j = 0; j < users[i].Pictures.length; j++) {
+          users[i].Pictures[j].imageUrl =
+            await pictureController.getPicUrlFromS3(
+              req,
+              users[i].Pictures[j].imageName
+            );
+        }
+      }
+      return res.json(users);
+    }
+  },
   getUserByEmail: async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -120,7 +142,7 @@ module.exports = {
   },
 
   update: async (req, res) => {
-    const id = req.user.id;
+    const id = req.body.id;
     const updateUser = await Users.update(req.body, { where: { id: id } });
     res.json(updateUser);
   },
