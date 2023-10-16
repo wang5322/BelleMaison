@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, {useRef, useState } from "react";
 import "./SearchBar.css";
 import SearchIcon from "@mui/icons-material/Search";
-//import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
-function SearchBar({ placeholder, data }) {
+function SearchBar({ placeholder, properties, handleCityChange ,resetCityChange }) {
   const [filteredData, setFilteredData] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [inputCity, setInputCity] = useState("");
   const [wordEntered, setWordEntered] = useState("");
+  const inputRef = useRef(null);
 
-  const handleFilter = (event) => {
+  const uniqueCities = ()=>{
+        const uniqueCitiesSet = new Set();
+        // Loop through the data and add city names to the Set
+        properties.forEach((property) => {
+            uniqueCitiesSet.add(property.city);
+        });
+        return Array.from(uniqueCitiesSet);
+  }
+
+  const citiesArray = uniqueCities();
+
+  const handleFilterCity = (event) => {
     const search = event.target.value;
-    const newFilter = data.filter((value) => {
-      return value.city.toLowerCase().includes(search.toLowerCase());
+    setInputCity("");
+    const newFilter = citiesArray.filter((value) => {
+      return value.toLowerCase().includes(search.toLowerCase());
     });
     if (search === "") {
       setFilteredData([]);
@@ -22,42 +35,49 @@ function SearchBar({ placeholder, data }) {
 
   const clearInput = () => {
     setFilteredData([]);
-    setWordEntered("");
-    setInputValue("");
+    // setWordEntered("");
+    // setInputCity("");
   };
 
   const setSearchCity = (value) => {
-    //setInputValue(value);
-    //alert(value);
-    document.getElementById("searchInput").value = value;
+    inputRef.current.value = value;
+    setInputCity(value);
     clearInput();
+    handleCityChange(value);
   };
 
+  const resetSearchCity = ()=>{
+    inputRef.current.value = "";
+    setInputCity("");
+    clearInput();
+    resetCityChange();
+  }
   return (
     <div className="search">
       <div className="searchInputs">
         <input
-          id="searchInput"
-          type="text"
-          placeholder={placeholder}
-          onChange={handleFilter}
+            id="searchInput"
+            type="text"
+            placeholder={placeholder}
+            onChange={handleFilterCity}
+            ref={inputRef}
         ></input>
         <div className="searchIcon">
-          {/* <SearchIcon onClick={doSearch()} /> */}
+            {/* <SearchIcon onClick={()=>{setSearchCity(inputRef.current.value)}} /> */}
+            {inputCity === "" ? (
+            <SearchIcon onClick={()=>{setSearchCity(inputRef.current.value)}} />
+            ) : (
+            <CloseIcon id="clearBtn" onClick={resetSearchCity} />
+          )}
         </div>
       </div>
       {filteredData.length !== 0 && (
         <div className="dataResult">
           {filteredData.map((value, key) => {
             return (
-              <a
-                onClick={() => {
-                  setSearchCity(value.city);
-                }}
-                className="dataItem"
-              >
-                {value.city}
-              </a>
+                <a key={key} onClick={() => {setSearchCity(value);}} className="dataItem">
+                    {value}
+                </a>
             );
           })}
         </div>

@@ -42,10 +42,10 @@ function OffcanvasNavbar() {
               <Nav className="justify-content-start flex-grow-1 pe-3">
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/brokerList">FindBroker</Nav.Link>
-                <Nav.Link href="#action2">Search</Nav.Link>
-                <Nav.Link href="/postProperty">PostProperty</Nav.Link>
+                {/* <Nav.Link href="#action2">Search</Nav.Link> */}
+                {authState.status && authState.role ==="broker" &&  <Nav.Link href="/postProperty">PostProperty</Nav.Link>}
 
-                <NavDropdown
+                {/* <NavDropdown
                   title="More"
                   id={`offcanvasNavbarDropdown-expand-"md"`}
                 >
@@ -57,7 +57,7 @@ function OffcanvasNavbar() {
                   <NavDropdown.Item href="#action5">
                     Something else here
                   </NavDropdown.Item>
-                </NavDropdown>
+                </NavDropdown> */}
                 {authState.status ? (
                   <span mt={4} className="d-flex justify-content-end mt-2">
                     <h6>Hello, {authState.email} </h6>{" "}

@@ -8,7 +8,7 @@ import Axios from "axios";
 function PropUpdateImageList({ pictures, setPictures }) {
   //   const navigate = useNavigate();
   //   const [updatedPictures, setUpdatedPictures] = useState([]);
-
+  console.log("certificates===", pictures);
   const deleteImage = (id) => {
     console.log("image deleted");
     Axios.delete(`http://localhost:3005/api/pictures/${id}`)

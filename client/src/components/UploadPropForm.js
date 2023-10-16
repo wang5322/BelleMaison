@@ -178,7 +178,7 @@ function UploadPropForm({ formik, onFileSelected, property }) {
                 <Form.Label>Bathroom Num:</Form.Label>
                 <FloatingLabel
                   controlId="form.bathroomsInput"
-                  label="Bedroom Num"
+                  label="Bathroom Num"
                   className="mb-3"
                 >
                   <Form.Control
