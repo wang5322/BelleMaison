@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { Row, Container } from "react-bootstrap";
 import Axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import ModalMessage from "../components/ModalMessage";
 
-function PropUpdateImageList({ pictures, setPictures }) {
+function PropUpdateImageList({ pictures, setPictures, type }) {
+  //Error&Message Modal section
+  const [show, setShow] = useState({ message: "", status: false });
+  const handleClose = () => {
+    setShow({ message: "", status: false });
+    window.location.reload();
+  };
+  const handleShow = (message) => setShow({ message: message, status: true });
+
   //   const navigate = useNavigate();
   //   const [updatedPictures, setUpdatedPictures] = useState([]);
   // console.log("certificates===", pictures);
   const deleteImage = (id) => {
     console.log("image deleted");
-    Axios.delete(`http://localhost:3005/api/pictures/${id}`)
+    Axios.delete(`${process.env.REACT_APP_HOST_URL}/api/pictures/${id}`)
       .then((response) => {
         const deletedPicId = response.data.id;
         const updated = pictures.filter(
@@ -23,9 +31,9 @@ function PropUpdateImageList({ pictures, setPictures }) {
       .catch((error) => {
         if (error.response && error.response.data.message) {
           // TODO: Replace with modal
-          alert(error.response.data.message);
+          handleShow(error.response.data.message);
         } else {
-          alert("There is an error occurred while uploading property");
+          handleShow("There is an error occurred while uploading property");
         }
       });
   };
@@ -35,7 +43,7 @@ function PropUpdateImageList({ pictures, setPictures }) {
         <hr />
         <Row className="my-3 px-4">
           {" "}
-          <h3> Gallery</h3>
+          {type === "thumbnail" ? <h3> Head Picture</h3> : <h3> Gallery</h3>}
         </Row>
 
         <Row className="justify-content-center">
@@ -54,8 +62,7 @@ function PropUpdateImageList({ pictures, setPictures }) {
 
                 <Card.Body className="justify-content-end">
                   <Button
-                    variant="dark"
-                    type="submit"
+                    variant="outline-danger"
                     onClickCapture={() => {
                       deleteImage(picture.id);
                     }}
@@ -66,6 +73,9 @@ function PropUpdateImageList({ pictures, setPictures }) {
               </Card>
             );
           })}
+
+          {/* Modal message rendering */}
+          <ModalMessage show={show} handleClose={handleClose}></ModalMessage>
         </Row>
       </Container>
     </React.Fragment>

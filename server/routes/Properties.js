@@ -8,6 +8,8 @@ router.post("/", validateToken, propertyController.add);
 
 router.get("/", s3Middleware, propertyController.getAll);
 
+router.get("/search", s3Middleware, propertyController.getAllSearch);
+
 router.get("/byId/:id", propertyController.getById);
 
 router.patch("/byId/:id", propertyController.toggleActive);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -13,6 +13,8 @@ import BedIcon from "@mui/icons-material/Bed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import Axios from "axios";
+import ModalMessage from "../components/ModalMessage";
 
 const Card = ({
   id,
@@ -25,8 +27,10 @@ const Card = ({
   year_built,
   price,
   page,
+  isActive,
   features,
 }) => {
+  // const [isPropActive, setIsPropActive] = useState(true); // toggle property state
   let navigate = useNavigate();
 
   const handleNavigate = (id) => {
@@ -43,6 +47,48 @@ const Card = ({
     } else {
       navigate(`/`);
     }
+  };
+
+  //Error&Message Modal section
+  const [show, setShow] = useState({ message: "", status: false });
+  const handleClose = () => {
+    setShow({ message: "", status: false });
+    window.location.reload();
+  };
+  const handleShow = (message) => setShow({ message: message, status: true });
+
+  const formattedPrice = price
+    ? price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "CAD",
+        maximumFractionDigits: 0,
+      })
+    : "Price not available";
+
+  const toggleActivation = (propertyId) => {
+    const newStatus = isActive == 1 ? 0 : 1;
+    Axios.patch(
+      `${process.env.REACT_APP_HOST_URL}/api/properties/byId/${propertyId}`,
+      { isActive: newStatus },
+      { headers: { accessToken: localStorage.getItem("accessToken") } }
+    )
+      .then((response) => {
+        if (response.data.error) {
+          handleShow("error in toggling property");
+          return;
+        }
+        // setIsPropActive(!isPropActive);
+
+        handleShow(
+          `Property is successfully ${
+            isActive == 1 ? `deactivated` : `activated`
+          }`
+        );
+        isActive = 0;
+      })
+      .catch((error) => {
+        handleShow("error in toggling property");
+      });
   };
   return (
     <>
@@ -71,12 +117,9 @@ const Card = ({
               alt={type}
             />
           )}
-          {/* <a>
-                <div className='mask' style={{ backgroundColor: 'rgba(251, 251, 251, 0.15)' }}></div>
-                </a> */}
         </MDBRipple>
         <MDBCardBody>
-          <MDBCardTitle>${price}</MDBCardTitle>
+          <MDBCardTitle>{formattedPrice}</MDBCardTitle>
           <div className="propertyInfo">
             <p>
               {type} Built at: {year_built}
@@ -96,18 +139,34 @@ const Card = ({
             </span>
             {/* <p>{features}</p> */}
           </div>
-          <Button onClick={() => handleNavigate(id)}>View</Button>
+          <Button variant="dark" onClick={() => handleNavigate(id)}>
+            View
+          </Button>
           {page === "broker" && (
-            <Button
-              variant="dark"
-              className="mx-2"
-              onClick={() => handleUpdate(id)}
-            >
-              Update
-            </Button>
+            <>
+              {" "}
+              <Button
+                variant="dark"
+                className="mx-2"
+                onClick={() => handleUpdate(id)}
+              >
+                Update
+              </Button>
+              <Button
+                variant={isActive == 1 ? "outline-danger" : "outline-dark"}
+                onClickCapture={() => {
+                  toggleActivation(id);
+                }}
+              >
+                {isActive == 1 ? "Deactivate" : "Activate"}
+              </Button>
+            </>
           )}
         </MDBCardBody>
       </MDBCard>
+
+      {/* Modal message rendering */}
+      <ModalMessage show={show} handleClose={handleClose}></ModalMessage>
     </>
   );
 };

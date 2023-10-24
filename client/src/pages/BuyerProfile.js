@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import "./BuyerProfile.css";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../helpers/AuthContext";
-import { Button } from 'react-bootstrap';
+import {Modal, Button } from 'react-bootstrap';
 import Card from "../components/MDBCard";
 
 function BuyerProfile() {
@@ -26,20 +26,26 @@ function BuyerProfile() {
     phone: Yup.string().matches(phoneRegExp, 'please enter a valid phone number').min(10, "must be 10 digits").max(10, "must be 10 digits").nullable(),
   });
 
+  //Error Modal section
+  const [show, setShow] = useState({ error: "", status: false });
+  const handleClose = () => setShow({ error: "", status: false });
+  const handleShow = (errorMessage) =>
+  setShow({ error: errorMessage, status: true });
+
   const onSubmit = (data) => {
-    axios.patch(`http://localhost:3005/api/users/byId`, data,
+    axios.patch(`${process.env.REACT_APP_HOST_URL}/api/users/byId`, data,
     { 
       headers: { accessToken: localStorage.getItem("accessToken")}}
     ).then((res) =>{
       console.log(data);
-         alert("profile updated successfully");
+      handleShow("profile updated successfully");
     });
   }
   useEffect(() => {
     if(!localStorage.getItem("accessToken")){
       navigate("/login")
     }else{
-      axios.get(`http://localhost:3005/api/users/byId`,
+      axios.get(`${process.env.REACT_APP_HOST_URL}/api/users/byId`,
       { headers: { accessToken: localStorage.getItem("accessToken") } }
     ).then((res) => {
       setUser(res.data);
@@ -47,11 +53,11 @@ function BuyerProfile() {
     })
     
       .catch((error) => {
-        alert("there is an error");
+        handleShow("there is an error");
       });
     
     }
-     axios.get("http://localhost:3005/api/favorites",
+     axios.get(`${process.env.REACT_APP_HOST_URL}/api/favorites`,
      { headers: { accessToken: localStorage.getItem("accessToken") } }
      ).then((res)=>{
       setFavourites(res.data);
@@ -96,7 +102,7 @@ function BuyerProfile() {
           <Col>
           <button type="submit">change my profile</button>
          
-          <button>change password</button>
+          {/* <button>change password</button> */}
           </Col>
           </Row>
           <label>Name: </label>
@@ -116,6 +122,24 @@ function BuyerProfile() {
         
       </div>
       </div>
+
+      {/* Modal rendering */}
+      <Modal show={show.status} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Oops!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{show.error}</Modal.Body>
+          <Modal.Footer>
+            <Button
+              className="bluButton"
+              variant="secondary"
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
     </Container>
 
   )

@@ -1,0 +1,65 @@
+.heroImage {
+  background-repeat: no-repeat !important;
+  background-size: cover;
+}
+
+.mask {
+  height: 400px;
+}
+
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.paginationBttns {
+  width: 60px;
+  height: 30px;
+  list-style: none;
+  text-align: center;
+  font-size: 14px;
+}
+
+.paginationBttns:hover {
+  color: white;
+  background-color: rgb(64, 83, 148);
+}
+
+.pageBtn {
+  width: 30px;
+  height: 30px;
+  list-style: none;
+  /* display: flex; */
+  justify-content: center;
+  font-size: 14px;
+}
+.pageBtn:hover {
+  color: white;
+  background-color: rgb(64, 83, 148);
+}
+
+.active {
+  color: white;
+  background-color: rgb(14, 51, 172);
+}
+
+.paginationActive a {
+  color: white;
+  background-color: rgb(14, 51, 172);
+}
+
+.paginationDisabled:hover {
+  color: rgb(153, 151, 151);
+  background-color: rgb(241, 239, 239);
+}
+
+.info {
+  margin-left: 145px;
+}
+
+.sorting {
+  margin-left: 80px;
+  margin-top: 8px;
+  font-size: 25px;
+}

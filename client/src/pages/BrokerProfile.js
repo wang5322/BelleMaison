@@ -7,10 +7,9 @@ import "../css/main.css";
 import MDBCard from "../components/MDBCard";
 import CertiGallery from "../components/PropUpdateImageList";
 import * as Yup from "yup";
-// import { AuthContext } from "../helpers/AuthContext";
+import ModalMessage from "../components/ModalMessage";
 
 function BrokerProfile() {
-  //   const id = 15;
   const [brokerId, setBrokerId] = useState("");
   const [broker, setBroker] = useState({});
   const [files, setFiles] = useState([]);
@@ -20,10 +19,6 @@ function BrokerProfile() {
   const [selectedImage, setSelectedImage] = useState(null);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-  //   const { authState } = useContext(AuthContext);
-  //   const id = authState.id;
-  //   console.log("id====", id);
-  //   console.log("authId====", authState.id);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -35,11 +30,13 @@ function BrokerProfile() {
       reader.onloadend = () => {
         // Set the selected image to the data URL
         setSelectedImage(reader.result);
+        console.log("the end of handleImageChagne");
       };
     }
   };
 
   const uploadFiles = (isCertificate) => {
+    console.log("button clicked=====");
     if (files && files.length > 0) {
       const formData = new FormData();
 
@@ -53,11 +50,13 @@ function BrokerProfile() {
       if (isCertificate) {
         formData.append("isCertificate", isCertificate);
       }
-      Axios.post("http://localhost:3005/api/pictures", formData, {
+      Axios.post(`${process.env.REACT_APP_HOST_URL}/api/pictures`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
         .then((response) => {
           console.log("pictureId", response.data.id);
+          handleShow("Picture successfully uploaded!");
+          // window.location.reload();
         })
         .catch((error) => {
           if (error.response.data.message) {
@@ -69,21 +68,26 @@ function BrokerProfile() {
           }
         });
       setFiles([]);
-      window.location.reload();
+      // window.location.reload();
     } else {
       console.log("No files selected");
     }
   };
 
   const displayProperties = properties.map((property) => {
-    if (Array.isArray(property.Pictures) && property.Pictures.length > 0) {
-      // Access the first picture's imageUrl
-      const imageUrl = property.Pictures[0].imageUrl;
+    const thumbnailPic = property.Pictures.filter(
+      (picture) => picture.isThumb === true
+    );
+    const thumbnailUrl =
+      thumbnailPic.length > 0 ? thumbnailPic[0].imageUrl : null;
+    console.log("====thumbnailUrl====", thumbnailUrl);
+
+    if (thumbnailUrl) {
       return (
         <MDBCard
           key={property.id}
           id={property.id}
-          img={imageUrl}
+          img={thumbnailUrl}
           address={property.address}
           city={property.city}
           type={property.type}
@@ -92,6 +96,7 @@ function BrokerProfile() {
           year_built={property.year_built}
           price={property.price}
           page="broker"
+          isActive={property.isActive}
           features={property.features}
         />
       );
@@ -108,17 +113,21 @@ function BrokerProfile() {
           bathrooms={property.bathrooms}
           year_built={property.year_built}
           price={property.price}
+          page="broker"
+          isActive={property.isActive}
           features={property.features}
         />
       );
     }
   });
 
-  //Error Modal section
-  const [show, setShow] = useState({ error: "", status: false });
-  const handleClose = () => setShow({ error: "", status: false });
-  const handleShow = (errorMessage) =>
-    setShow({ error: errorMessage, status: true });
+  //Error&Message Modal section
+  const [show, setShow] = useState({ message: "", status: false });
+  const handleClose = () => {
+    setShow({ message: "", status: false });
+    window.location.reload();
+  };
+  const handleShow = (message) => setShow({ message: message, status: true });
 
   //Profile Modal section
   const [showProfileEdit, setProfileEdit] = useState(false);
@@ -129,7 +138,7 @@ function BrokerProfile() {
   const handleProfileShow = () => setProfileEdit(true);
 
   const deleteProfile = (profilId) => {
-    Axios.delete(`http://localhost:3005/api/pictures/${profilId}`)
+    Axios.delete(`${process.env.REACT_APP_HOST_URL}/api/pictures/${profilId}`)
       .then(() => {
         setProfile({});
       })
@@ -145,18 +154,15 @@ function BrokerProfile() {
   };
   //Get broker info & properties info
   useEffect(() => {
-    console.log("======entered useEffect=========");
-    Axios.get(`http://localhost:3005/api/users/byId`, {
+    // console.log("======entered useEffect=========");
+    Axios.get(`${process.env.REACT_APP_HOST_URL}/api/users/byId`, {
       headers: {
         accessToken: localStorage.getItem("accessToken"),
       },
     })
       .then((response) => {
-        // console.log("====entered response======");
-        console.log("user Info======", response.data);
         setBroker(response.data);
         setBrokerId(response.data.id);
-
         const certificatePictures = [];
 
         //Seperate profile picture and certificate pictures
@@ -172,29 +178,28 @@ function BrokerProfile() {
           // Update certificates state after the loop
           setCertificates(certificatePictures);
         }
-
-        console.log(certificates);
-        // console.log("profileInfo====", profile);
       })
       .catch((error) => {
-        alert(error);
-        // if (error.response.data.message) {
-        //   handleShow(error.response.data.message);
-        // } else {
-        //   handleShow("There is an error occured while getting broker info");
-        // }
+        handleShow(error);
+        if (error.response.data.message) {
+          handleShow(error.response.data.message);
+        } else {
+          handleShow("There is an error occured while getting broker info");
+        }
       });
 
-    Axios.get(`http://localhost:3005/api/properties/byBroker`, {
+    Axios.get(`${process.env.REACT_APP_HOST_URL}/api/properties/byBroker`, {
       headers: {
         accessToken: localStorage.getItem("accessToken"),
       },
     })
       .then((response) => {
-        setProperties(response.data);
+        if (response.data.length > 0) {
+          setProperties(response.data);
+        }
       })
       .catch((error) => {
-        alert(error);
+        handleShow(error);
       });
   }, []);
 
@@ -222,17 +227,21 @@ function BrokerProfile() {
     }),
     onSubmit: (values) => {
       try {
-        Axios.patch(`http://localhost:3005/api/users/byId/`, values, {
-          headers: { accessToken: localStorage.getItem("accessToken") },
-        }).then(() => {
-          alert("profile info updated");
+        Axios.patch(
+          `${process.env.REACT_APP_HOST_URL}/api/users/byId/`,
+          values,
+          {
+            headers: { accessToken: localStorage.getItem("accessToken") },
+          }
+        ).then(() => {
+          handleShow("Profile info successfully updated!");
         });
       } catch (error) {
         if (error.response && error.response.data.message) {
           // TODO: Replace with modal
-          alert(error.response.data.message);
+          handleShow(error.response.data.message);
         } else {
-          alert("There is an error occurred while uploading property");
+          handleShow("There is an error occurred while uploading property");
         }
       }
     },
@@ -244,6 +253,18 @@ function BrokerProfile() {
         {/* Profile info & profile picture section*/}
         <Row>
           <h1>Broker Profile</h1>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <span
+              style={{
+                color: broker.broker_approval === 1 ? "black" : "red",
+                textDecoration: "underline",
+              }}
+            >
+              {broker.broker_approval === 1
+                ? "Your account is approved"
+                : "Upload certificates to get approved"}
+            </span>
+          </div>
         </Row>
         <Card className="mt-4">
           <Form onSubmit={formik.handleSubmit}>
@@ -344,7 +365,7 @@ function BrokerProfile() {
                     {profile && Object.keys(profile).length !== 0 ? (
                       <Button
                         className="mt-3"
-                        variant="dark"
+                        variant="outline-danger"
                         onClick={() => {
                           deleteProfile(profile.id);
                         }}
@@ -366,10 +387,11 @@ function BrokerProfile() {
         {/* Certificate Section */}
         <Row className="certificate">
           <h2>Certificate</h2>
+          <h5>Upload your certificates to get approved</h5>
 
           <Form className="mb-3">
             <Form.Group>
-              <Form.Label>Upload certificates</Form.Label>
+              {/* <Form.Label>Upload certificates</Form.Label> */}
               <div className="d-flex">
                 {" "}
                 <div style={{ width: "600px" }}>
@@ -380,8 +402,8 @@ function BrokerProfile() {
                   ></Form.Control>
                 </div>
                 <Button
+                  variant="dark"
                   className="mx-2"
-                  type="submit"
                   onClick={() => uploadFiles(1)}
                 >
                   Submit certificates
@@ -401,31 +423,23 @@ function BrokerProfile() {
         <Row className="propertyList">
           <div className="mt-2">
             <h2>Properties posted</h2>
-            <div>
-              <Button variant="dark">Add porperty</Button>
-            </div>
+            {broker.broker_approval === 1 && (
+              <div>
+                <Button variant="dark" href="/postProperty">
+                  Add porperty
+                </Button>
+              </div>
+            )}
           </div>
-          <div className="card-container">{displayProperties}</div>
+          {properties && properties.length > 0 && (
+            <div className="card-container">{displayProperties}</div>
+          )}
 
           <hr></hr>
         </Row>
 
-        {/* Modal rendering */}
-        <Modal show={show.status} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Oops!</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{show.error}</Modal.Body>
-          <Modal.Footer>
-            <Button
-              className="bluButton"
-              variant="secondary"
-              onClick={handleClose}
-            >
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {/* Modal message rendering */}
+        <ModalMessage show={show} handleClose={handleClose}></ModalMessage>
 
         {/* Profile Modal rendering */}
         <Modal show={showProfileEdit} onHide={handleProfileClose}>

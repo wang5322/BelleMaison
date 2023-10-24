@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(3000),
       allowNull: true,
     },
+    isThumb: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
   });
 
   Pictures.associate = (models) => {

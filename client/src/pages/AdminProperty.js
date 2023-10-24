@@ -4,23 +4,52 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import "./Admin.css"
 import { Link } from 'react-router-dom';
 
 function AdminProperty() {
     const [propertyList, setPropertyList] = useState([]);
+    const [activeProperty, setActiveProperty] = useState(1);
+    const [message, setMessage] = useState(null);
+    const showAlert = (message) => {
+        setMessage(message);
+        // setTimeout(() => setMessage(null), 3000);
+    };
     useEffect(() => {
-        axios.get("http://localhost:3005/api/properties").then((res) => {
+        axios.get(`${process.env.REACT_APP_HOST_URL}/api/properties`).then((res) => {
             setPropertyList(res.data);
         }).catch((err) => {
             if (err.response.data.status !== 404) {
-                alert("no records found!");
+                showAlert("no records found!");
                 return
             }
         })
-    }, []);
+    }, [activeProperty]);
+    const deactive = (propertyid, activeStatus) => {
+        axios
+            .patch(
+                `${process.env.REACT_APP_HOST_URL}/api/properties/byId/${propertyid}`,
+                { id: propertyid,isActive: activeStatus },
+                { headers: { accessToken: localStorage.getItem("accessToken") } }
+            )
+            .then((res) => {
+
+                if (res.data.error) {
+                    showAlert("error in approving user");
+                    return;
+                }
+                console.log(res);
+                setActiveProperty(activeProperty + 1);
+                showAlert("property is deactived");
+            })
+            .catch((err) => {
+                showAlert("error in deactive property");
+            });
+    }
     return (
         <div className="adminTable">
+            {message && <Alert variant="danger" onClose={() => setMessage(null)} dismissible>{message}</Alert>}
             <Row>
                 <Col>
                     <h1>Property Management</h1>
@@ -52,11 +81,30 @@ function AdminProperty() {
                                 <td>{value.city}</td>
                                 <td>{value.postal}</td>
 
-                                <td>{value.type}</td>
+                <td>{value.type}</td>
 
-                                <td>{value.isActive}</td>
+                <td>{value.isActive}</td>
 
-                                <td><Button variant="outline-warning">Deactive</Button></td>
+                                <td>{!value.isActive ? (
+                                    <Button
+                                        variant="outline-danger"
+                                        onClick={() => {
+                                            deactive(value.id, 1);
+                                        }}
+                                    >
+                                        Active
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => {
+                                            deactive(value.id, 0);
+                                        }}
+                                    >
+                                        deactive
+                                    </Button>
+                                )}
+                                </td>
                             </tr>
                         )
 
@@ -68,4 +116,4 @@ function AdminProperty() {
     )
 }
 
-export default AdminProperty
+export default AdminProperty;

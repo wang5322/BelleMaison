@@ -15,6 +15,7 @@ module.exports = {
       let propertyId = null;
       let brokerId = null;
       let isCertificate = 0;
+
       //TODO: add auth payload(eg: userId, userEmail)
       if (req.body.propertyId) {
         propertyId = req.body.propertyId;
@@ -55,6 +56,7 @@ module.exports = {
             property_id: propertyId,
             broker_id: brokerId,
             isCertificate: isCertificate,
+            isThumb: 0,
           };
 
           return await Pictures.create(pictureData);
@@ -68,38 +70,157 @@ module.exports = {
     }
   },
 
-  // Not implemented yet
-  addSingle: async (req, res) => {
+  addThumb: async (req, res) => {
     try {
-      //TODO: add auth payload(eg: userId, userEmail)
-      // const Picture = req.body;
-      // console.log("req.body", Picture);
-      // console.log("req.file", req.file);
+      console.log("=====entered picture_controller add=====");
+      let propertyId = null;
+      if (req.body.propertyId) {
+        propertyId = req.body.propertyId;
+        console.log("======req.property_id=======", propertyId);
+      }
 
-      //   req.file.buffer;
+      console.log("======req.file==============", req.files);
+      // req.file.buffer;
       const randomImageName = (bytes = 32) =>
         crypto.randomBytes(bytes).toString("hex");
-      const imageName = randomImageName();
-      const s3key = `${req.file.originalname}-${imageName}`;
-      // console.log("randomImage", imageName);
 
-      const params = {
-        Bucket: req.bucketName,
-        Key: s3key,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype,
-      };
-      const command = new PutObjectCommand(params);
+      // Handling multiple files, iterate over req.files
+      const pictures = await Promise.all(
+        req.files.map(async (file) => {
+          const imageName = randomImageName();
+          let lastIndex = file.originalname.lastIndexOf(".");
+          const fileName =
+            file.originalname.substring(0, lastIndex) +
+            "-thumbnail" +
+            file.originalname.substring(lastIndex);
+          s3Key = `${fileName}-${imageName}`;
 
-      await req.s3.send(command);
-      const picture = await Pictures.create({
-        imageName: s3key,
-        property_id: 6,
-      });
+          const params = {
+            Bucket: req.bucketName,
+            Key: s3Key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          };
 
-      res.status(201).json(picture);
+          const command = new PutObjectCommand(params);
+          await req.s3.send(command);
+
+          const pictureData = {
+            imageName: s3Key,
+            property_id: propertyId,
+            isCertificate: 0,
+            isThumb: 1,
+          };
+
+          return await Pictures.create(pictureData);
+        })
+      );
+
+      res.status(201).json(pictures);
     } catch (error) {
-      console.error(error);
+      console.error("Error in add method:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  // NOT IMPLEMENTED  Add original images and resized image thumbnails
+  addOriginThumb: async (req, res) => {
+    try {
+      console.log("=====entered picture_controller addThumbnail=====");
+      let propertyId = null;
+      let brokerId = null;
+      let isCertificate = 0;
+      //TODO: add auth payload(eg: userId, userEmail)
+      if (req.body.propertyId) {
+        propertyId = req.body.propertyId;
+        console.log("======req.property_id=======", propertyId);
+      }
+      if (req.body.brokerId) {
+        brokerId = req.body.brokerId;
+        console.log("======req.broker_id=======", brokerId);
+      }
+      if (req.body.isCertificate) {
+        isCertificate = req.body.isCertificate;
+      }
+
+      // console.log("======req.file==============", req.files);
+      // req.file.buffer;
+
+      const randomImageName = (bytes = 32) =>
+        crypto.randomBytes(bytes).toString("hex");
+
+      //seperate originalImages and resizedImages
+      const originalImages = req.files.originalImages;
+      const resizedImages = req.files.resizedImages;
+
+      // Handling multiple files, iterate over originalImages
+      console.log("===originalImages===", originalImages);
+      console.log("===resizedImages===", resizedImages);
+
+      //upload Original Images
+      const originalPictures = await Promise.all(
+        originalImages.map(async (file) => {
+          const imageName = randomImageName();
+          s3Key = `${file.originalname}-${imageName}`;
+
+          const params = {
+            Bucket: req.bucketName,
+            Key: s3Key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          };
+
+          const command = new PutObjectCommand(params);
+          await req.s3.send(command);
+
+          const pictureData = {
+            imageName: s3Key,
+            property_id: propertyId,
+            broker_id: brokerId,
+            isCertificate: isCertificate,
+          };
+
+          return await Pictures.create(pictureData);
+        })
+      );
+
+      //upload Resized Images
+      const resizedPictures = await Promise.all(
+        resizedImages.map(async (file) => {
+          const imageName = randomImageName();
+          let lastIndex = file.originalname.lastIndexOf(".");
+          const fileName =
+            file.originalname.substring(0, lastIndex) +
+            "-thumbnail" +
+            file.originalname.substring(lastIndex);
+          s3Key = `${fileName}-${imageName}`;
+
+          const params = {
+            Bucket: req.bucketName,
+            Key: s3Key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          };
+
+          const command = new PutObjectCommand(params);
+          await req.s3.send(command);
+
+          const pictureData = {
+            imageName: s3Key,
+            property_id: propertyId,
+            broker_id: brokerId,
+            isCertificate: isCertificate,
+          };
+
+          return await Pictures.create(pictureData);
+        })
+      );
+      res.status(201).json({
+        originalPictures: originalPictures,
+        resizedPictures: resizedPictures,
+      });
+    } catch (error) {
+      console.error("Error in add method:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   },
@@ -156,20 +277,6 @@ module.exports = {
             expiresIn: 3600,
           });
           picture.imageUrl = url;
-          // const id = picture.id;
-          // Pictures.update(
-          //   { imageUrl: url },
-          //   { where: { id: id },
-          // }).then((result) => {
-          //     if (result[0] === 1) {
-          //       console.log(`=======Successfully updated imageUrl for record with id ${targetId}`);
-          //     } else {
-          //       console.log(`=======No records with id ${targetId} found`);
-          //     }
-          //   })
-          //   .catch((error) => {
-          //     console.error("=======Error updating imageUrl:", error);
-          //   });
         } catch (error) {
           console.error("==========Error generating signed URL:", error);
         }
@@ -231,7 +338,7 @@ module.exports = {
       });
       return url;
     } catch (error) {
-      console.error("==========Error generating signed URL:", error);
+      console.error("=====Error generating signed URL:=====", error);
     }
   },
 

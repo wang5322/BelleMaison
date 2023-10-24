@@ -1,5 +1,6 @@
 const { Properties, Favorites, Pictures } = require("../models");
 const pictureController = require("./picture_controller");
+const { Op } = require("sequelize");
 
 var validator = require("validator");
 
@@ -19,27 +20,19 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
-  //   Display on home Page
+
   getAll: async (req, res) => {
     try {
       const properties = await Properties.findAll({
         include: [Pictures],
+        // where: { isActive: 1 },
+        order: [["id", "ASC"]],
       });
       if (properties.length === 0) {
         res.status(400).json({ message: "Properties don't exist" });
       }
 
       // Call the getByProp method from picture_controller for each property
-      // await Promise.all(
-      //   properties.map(async (property) => {
-      //     const picture = await pictureController.getByPropForHome(req, res, property.id);
-      //     if (picture) {
-      //       property.Pictures = [picture];
-      //     } else {
-      //       property.Pictures = []; // If there's no picture, add an empty array
-      //     }
-      //   })
-      // )
 
       for (let i = 0; i < properties.length; i++) {
         for (let j = 0; j < properties[i].Pictures.length; j++) {
@@ -56,6 +49,122 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+  //   Display on home Page by search
+  getAllSearch: async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const whereString = req.query.searchString;
+
+    let whereClause = {};
+    // whereClause.isActive=1;
+    // whereClause.city='Brossard';
+    if (whereString !== "") {
+      let paramsPairs = whereString.split(",");
+      var minP = 0;
+      for (let i = 0; i < paramsPairs.length; i++) {
+        const keyValue = paramsPairs[i].trim().split(":");
+        const key = keyValue[0].trim();
+        const value = keyValue[1].trim();
+
+        if (key == "bedrooms" || key == "bathrooms" || key == "built_year") {
+          whereClause[key] = {
+            [Op.gte]: parseInt(value),
+          };
+        } else if (key == "minPrice") {
+          minP = parseInt(value);
+          console.log("=========minP=========", minP);
+          whereClause.price = {
+            [Op.gte]: parseInt(value),
+          };
+        } else if (key == "maxPrice") {
+          console.log("=========minP=========", minP);
+          whereClause.price = {
+            [Op.between]: [minP, parseInt(value)],
+          };
+        } else {
+          whereClause[key] = isNaN(value) ? value : parseInt(value);
+        }
+      }
+    }
+
+    // where:{
+    //   isAction:1,
+    //   bedrooms:{[Op.gte]:value}
+    // }
+
+    const offset = (page - 1) * pageSize;
+    try {
+      //find the count of total properties
+      const totalCount = await Properties.count({
+        where: { isActive: 1 },
+        distinct: true,
+        attributes: ["id"],
+      }).catch((err) => {
+        return res.status(404).json(err);
+      });
+      console.log('whereClause=================',whereClause);
+      const { count, rows } = await Properties.findAndCountAll({
+        include: [Pictures],
+        where: whereClause,
+        order: [["id", "DESC"]],
+        offset,
+        limit: pageSize,
+        distinct: true,
+        attributes: [
+          "id",
+          `broker_id`,
+          `address`,
+          `city`,
+          `postal`,
+          `type`,
+          `rooms`,
+          `bathrooms`,
+          `bedrooms`,
+          `year_built`,
+          `price`,
+          `features`,
+          `description`,
+          `isActive`,
+          `lotArea`,
+          `parking`,
+          `createdAt`,
+          `updatedAt`,
+        ],
+      }).catch((err) => {
+        return res.status(404).json(err);
+      });
+      console.log("rows=========",rows);
+      console.log("count=========",count);
+
+      if (rows) {
+        for (let i = 0; i < rows.length; i++) {
+          for (let j = 0; j < rows[i].Pictures.length; j++) {
+            rows[i].Pictures[j].imageUrl =
+              await pictureController.getPicUrlFromS3(
+                req,
+                rows[i].Pictures[j].imageName
+              );
+          }
+        }
+        res.status(200).json({
+          totalCount: totalCount,
+          totalPage: Math.ceil(count / pageSize),
+          currentPage: page,
+          properties: rows,
+        });
+      }else{
+        console.log("in else=========",count);
+        res.status(400).json({ message: "Properties don't exist" });
+        return ;
+      }
+
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
   //   Display on property Page
   getById: async (req, res) => {
     try {
@@ -86,10 +195,15 @@ module.exports = {
       console.log("brokerId=====", brokerId);
       const properties = await Properties.findAll({
         where: { broker_id: brokerId },
-        include: [Pictures],
+        include: [
+          {
+            model: Pictures,
+          },
+        ],
       });
       if (properties.length === 0) {
-        res.status(400).json({ message: "Properties don't exist" });
+        res.status(200).json({ message: "Properties don't exist" });
+        return;
       }
       for (let i = 0; i < properties.length; i++) {
         for (let j = 0; j < properties[i].Pictures.length; j++) {

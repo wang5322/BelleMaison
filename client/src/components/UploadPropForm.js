@@ -2,9 +2,15 @@ import React, { useEffect } from "react";
 import { Col, Row, Form, FloatingLabel } from "react-bootstrap";
 import ErrorMessageAlert from "./ErrorMessageAlert";
 // test commit
-function UploadPropForm({ formik, onFileSelected, property }) {
-  console.log("Property info:===", property);
-
+function UploadPropForm({
+  formik,
+  onFileSelected,
+  onMultipleFileSelected,
+  property,
+  hasThumbnail,
+}) {
+  // console.log("Property info:===", property);
+  // const picNum = picNum;
   useEffect(() => {
     // Set property.price as the initial value when the component mounts
     formik.setValues({
@@ -221,8 +227,8 @@ function UploadPropForm({ formik, onFileSelected, property }) {
             {/* Lot area */}
             <Col md="6">
               <Form.Group className="mb-3" controlId="form.lotArea">
-                <Form.Label>Lot Area:</Form.Label>
-                <FloatingLabel label="Lot Area" className="mb-3">
+                <Form.Label>Lot Area(sqft):</Form.Label>
+                <FloatingLabel label="Lot Area(sqft)" className="mb-3">
                   <Form.Control
                     type="text"
                     name="lotArea"
@@ -306,13 +312,25 @@ function UploadPropForm({ formik, onFileSelected, property }) {
           </Form.Group>
 
           {/* Image uploading */}
+          {hasThumbnail === false && (
+            <Form.Group controlId="formPropertyPictures" className="mb-3">
+              <Form.Label>Upload Property Head Picture</Form.Label>
+              <Form.Control
+                type="file"
+                single
+                accept="image/*"
+                onChange={onFileSelected}
+              />
+            </Form.Group>
+          )}
+
           <Form.Group controlId="formPropertyPictures" className="mb-3">
-            <Form.Label>Upload Property Pictures</Form.Label>
+            <Form.Label>Upload Property Gallery Picture</Form.Label>
             <Form.Control
               type="file"
               multiple
               accept="image/*"
-              onChange={onFileSelected}
+              onChange={onMultipleFileSelected}
             />
           </Form.Group>
         </Col>

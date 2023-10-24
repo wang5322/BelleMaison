@@ -29,11 +29,14 @@ function Registration(){
             alert("Please Select Role!");
             return;
         }
-        axios.post("http://localhost:3005/api/users", data)
+        axios.post(`${process.env.REACT_APP_HOST_URL}/api/users`, data)
         .then((response)=>{
+            console.log("1 data.role = " )
             if (response.data.error){
+                console.log("2 data.role = " )
                 alert(response.data.error);
             }else{
+                console.log("1 data.role = " )
                 navigate("/login");
             }
         }).catch((err)=>{
@@ -44,6 +47,7 @@ function Registration(){
     };
 
     return (
+        <main className="main-content">
         <div className="centerContainer">
             <h2>Registration</h2>
             {error && <span className="spanred" >Error: {error}</span>}
@@ -74,6 +78,7 @@ function Registration(){
                 </Form>
             </Formik>
         </div>
+        </main>
     )
     
 }

@@ -3,7 +3,7 @@ const multer = require("multer");
 const uploadImageMemory = (req, res, next) => {
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
-  console.log("entering multer middleware method");
+  console.log("=====entering multer middleware method=====");
 
   // Use upload.array("images") to handle multiple files
   upload.array("images")(req, res, (err) => {

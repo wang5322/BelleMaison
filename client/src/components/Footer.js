@@ -6,6 +6,7 @@ import '../App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -38,10 +39,9 @@ export default function AppFooter(){
                 <Col>
                     <div>
                         <h4>Contact Us:</h4>
-                        <Row>
-                            <Col>Email: <p><MailOutlineIcon/> BelleMaison@gmail.com</p></Col>
-                            <Col>Phone:<p><PhoneIcon/> +1 (514) 567-9876</p></Col>
-                        </Row>
+                            <div>Email: <p><MailOutlineIcon/> BelleMaison@gmail.com</p></div>
+                            <div>Phone:<p><PhoneIcon/> +1 (514) 567-9876</p></div>
+
                     </div>
                 </Col>
                 <Col>
