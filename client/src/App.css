@@ -1,20 +1,10 @@
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Make sure the container takes at least the full viewport height */
-}
-
-.main-content {
-  flex: 1; /* Allow the main content to grow and push the footer down */
-}
-
-footer {
-  position: relative;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  padding: 10px 0;
+footer{
+    position:relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
 }
 
 #footer {
